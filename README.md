@@ -41,6 +41,117 @@ To use the `fix-message` component, you need to include the `fix-message.mjs` sc
 
 *   `message`: The FIX message string to be displayed. The default delimiter is the SOH character (ASCII 1).
 *   `delimiter`: The delimiter used in the `message` string. The default is `|`.
-*   `mode`: The display mode. Can be `table` (default) or `string`.
+*   `mode`: The display mode. Can be `string` or `table`. If not specified, it will render as a string.
 *   `data-dictionary`: (Optional) The path to a custom data dictionary XML file. If not provided, the component will use the built-in dictionaries based on the message's `BeginString(8)` value.
 *   `use-host-dom`: (Optional) If present, the component will render directly into the host element's DOM instead of its shadow DOM. This is useful for applying global styles.
+
+## Examples
+
+### Default Mode (String)
+If you don't specify a `mode`, the component will render the FIX message as a simple string with the specified delimiter. This is useful for quickly displaying the raw message.
+
+```html
+<fix-message
+    message="8=FIX.4.2|9=123|35=D|..."
+    delimiter="|"
+></fix-message>
+```
+
+### Table Mode
+The `table` mode provides a detailed, human-readable view of the FIX message, with each tag-value pair on its own row. This is ideal for analysis and debugging.
+
+```html
+<fix-message
+    message="8=FIX.4.2|9=123|35=D|..."
+    mode="table"
+    delimiter="|"
+></fix-message>
+```
+
+### Using a Custom Dictionary
+For proprietary FIX implementations or custom tags, you can provide a path to your own dictionary file. This is useful when working with non-standard FIX messages.
+
+```html
+<fix-message
+    message="8=FIXT.1.1|9=123|35=W|...|9000=CUSTOM_VALUE"
+    mode="table"
+    delimiter="|"
+    data-dictionary="/path/to/your/custom-fix-dictionary.xml"
+></fix-message>
+```
+
+### Styling with Host CSS (`use-host-dom`)
+If you want to apply your own global CSS styles to the component, you can use the `use-host-dom` attribute. This will render the component in the main document's DOM, allowing your stylesheets to apply. This is useful for integrating the component seamlessly into your application's design.
+
+```html
+<style>
+    /* Example: Custom styles for the table */
+    fix-message table {
+        border: 2px solid blue;
+    }
+</style>
+
+<fix-message
+    message="8=FIX.4.2|9=123|35=D|..."
+    mode="table"
+    delimiter="|"
+    use-host-dom
+></fix-message>
+```
+
+### Using SOH Separator
+FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly. Note that you might need to set the delimiter attribute to `\x01` if it's not the default.
+
+```html
+<fix-message
+    message="8=FIX.4.29=12335=D..."
+    mode="table"
+></fix-message>
+```
+
+You can also set the message and delimiter programmatically in JavaScript:
+
+```javascript
+const fixElement = document.querySelector('fix-message');
+const sohMessage = '8=FIX.4.2\x019=123\x0135=D\x01...';
+fixElement.setAttribute('message', sohMessage);
+// The component uses SOH as the default delimiter if the message contains it,
+// but you can set it explicitly if needed.
+// fixElement.setAttribute('delimiter', '\x01');
+```
+
+### Styling with CSS Variables (Shadow DOM)
+When using the default Shadow DOM encapsulation, you can customize the component's appearance by overriding its CSS custom properties.
+
+```html
+<style>
+    fix-message {
+        --font-family: "Georgia", serif;
+        --tag-color: #9C27B0;
+        --string-value-color: #4CAF50;
+        --background-color: #222;
+        --font-color: #eee;
+        --border-color: #555;
+    }
+</style>
+```
+
+Here is a list of the available CSS variables:
+
+| Variable                | Description                                       | Default Value                                           |
+|-------------------------|---------------------------------------------------|---------------------------------------------------------|
+| `--font-size`           | The base font size for the table.                 | `14px`                                                  |
+| `--font-family`         | The primary font for text content.                | `-apple-system, BlinkMacSystemFont, "Segoe UI", ...`     |
+| `--font-monospace`      | The font for monospace content like tags and values.| `'Consolas', 'Menlo', 'Courier New', monospace`         |
+| `--font-color`          | The main text color.                              | `#333`                                                  |
+| `--value-color`         | The default color for values in the table.        | `#333`                                                  |
+| `--type-color`          | The color for the data type column.               | `#999`                                                  |
+| `--string-value-color`  | The color for string data types.                  | `#269141`                                               |
+| `--char-value-color`    | The color for character data types.               | `#a61945`                                               |
+| `--integer-value-color` | The color for integer data types.                 | `#0366d6`                                               |
+| `--float-value-color`   | The color for float/decimal data types.           | `#0366d6`                                               |
+| `--boolean-value-color` | The color for boolean data types.                 | `#a61945`                                               |
+| `--datetime-value-color`| The color for date and time data types.           | `#a61945`                                               |
+| `--tag-color`           | The color for the tag number column.              | `#0366d6`                                               |
+| `--border-color`        | The color for table borders.                      | `#e1e4e8`                                               |
+| `--background-color`    | The background color for alternating rows.        | `#f6f8fa`                                               |
