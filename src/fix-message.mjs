@@ -548,7 +548,7 @@ tr.level-3 td.name {
         const hour = parseInt(value.substring(9, 11), 10);
         const minute = parseInt(value.substring(12, 14), 10);
         const second = parseInt(value.substring(15, 17), 10);
-        const millisecond = parseInt(value.substring(18, 21), 10);
+        const millisecond = value.length > 17 ? parseInt(value.substring(18, 21), 10) : 0;
         return new Date(Date.UTC(year, month, day, hour, minute, second, millisecond));
     }
 }

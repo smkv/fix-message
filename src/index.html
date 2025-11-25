@@ -13,14 +13,17 @@
         <div class="mb-3">
             <label for="fixMessageTextarea" class="form-label">FIX message</label>
             <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp"></textarea>
-            <div id="fixMessageHelp" class="form-text">Enter a FIX message here</div>
+            <div id="fixMessageHelp" class="form-text">Enter a FIX message to decode. All processing is done locally in your browser, so your data remains secure and is never sent to a server. The standard SOH delimiter is always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|</div>
         </div>
         <div class="mb-3">
             <label for="delimiterInput" class="form-label">Delimiter</label>
-            <input type="text" class="form-control" id="delimiterInput" value="|">
+            <input type="text" class="form-control" id="delimiterInput" value="|" size="1" maxlength="1" style="width: 36px;">
         </div>
     </form>
     <fix-message id="fixMessage" message="" mode="table"></fix-message>
+    <div class="text-muted">
+        Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a>, an open-source Web Component for decoding FIX messages.
+    </div>
 </div>
 <script src="fix-message.mjs" type="module"></script>
 <script>
