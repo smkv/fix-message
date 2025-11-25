@@ -296,7 +296,18 @@ tr.level-3 td.name {
             const value = item.value;
             const name = item.name || '';
             const type = item.type || '';
-            const description = type === 'UTCTIMESTAMP' ? this.toLocalTimestamp(value) : item.values ? item.values[value] : '';
+            let description;
+            if (type === 'UTCTIMESTAMP') {
+                description = this.toLocalTimestamp(value);
+            } else if (type === 'LOCALMKTDATE') {
+                description = this.toLocalDate(value);
+            } else if (type === 'BOOLEAN') {
+                description = value === 'Y' ? 'Yes (positive)' : 'No (negative)';
+            } else if (type === 'MONTHYEAR') {
+                description = this.toLocalYearMonth(value);
+            } else {
+                description = item.values ? item.values[value] : '';
+            }
             const last = i === model.length - 1;
             const tr = this.createTableRow(tag, name, value, description, type, 'td');
             tr.classList.add(`level-${level}`);
@@ -550,6 +561,28 @@ tr.level-3 td.name {
         const second = parseInt(value.substring(15, 17), 10);
         const millisecond = value.length > 17 ? parseInt(value.substring(18, 21), 10) : 0;
         return new Date(Date.UTC(year, month, day, hour, minute, second, millisecond));
+    }
+
+    toLocalDate(value) {
+        // value in format 	20231120
+        if (!value) {
+            return null;
+        }
+        const year = parseInt(value.substring(0, 4), 10);
+        const month = parseInt(value.substring(4, 6), 10) - 1; // Month is 0-indexed
+        const day = parseInt(value.substring(6, 8), 10);
+        return new Date(year, month, day);
+    }
+
+    toLocalYearMonth(value) {
+        // value in format 	202311
+        if (!value) {
+            return null;
+        }
+        const year = parseInt(value.substring(0, 4), 10);
+        const month = parseInt(value.substring(4, 6), 10) - 1; // Month is 0-indexed
+        const date = new Date(year, month);
+        return date.toLocaleString(undefined, {year: 'numeric', month: 'long'});
     }
 }
 
