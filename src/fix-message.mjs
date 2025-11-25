@@ -81,12 +81,12 @@ class FixMessageHTMLElement extends HTMLElement {
     async renderTable() {
         const model = await this.loadModel();
         const table = document.createElement('table');
-        table.append(this.createTableRow('', 'Tag', 'Name', 'Value', 'Description', 'Type', 'th'));
-        table.append(this.createTableRow('Header'));
+        table.append(this.createTableRow('Tag', 'Name', 'Value', 'Description', 'Type', 'th'));
+        table.append(this.createSectionRow('Header'));
         this.buildTableBody(table, model.header);
-        table.append(this.createTableRow('Message'));
+        table.append(this.createSectionRow('Message'));
         this.buildTableBody(table, model.message);
-        table.append(this.createTableRow('Trailer'));
+        table.append(this.createSectionRow('Trailer'));
         this.buildTableBody(table, model.trailer);
         this.dom.innerHTML = '';
         if (!this.useHostDom) {
@@ -105,26 +105,16 @@ class FixMessageHTMLElement extends HTMLElement {
     --font-color: #333;
     --value-color: #333;
     --type-color: #999;
-    /* 1. String (Soft Orange) */
     --string-value-color: #269141;
-
-    /* 2. Character (Hot Pink - for critical flags) */
     --char-value-color: #a61945;
-
-    /* 3. Integer (Pale Green - for Sequence/Group counts) */
     --integer-value-color: #0366d6;
-
-    /* 4. Float (Cyan - for Prices/Amounts/Quantities) */
     --float-value-color: #0366d6;
-
-    /* 5. Boolean (Lavender/Violet) */
     --boolean-value-color: #a61945;
-
-    /* 6. Date & Time (Muted Teal - for Timestamps) */
     --datetime-value-color: #a61945;
     --tag-color: #0366d6;
     --border-color: #e1e4e8;
     --background-color: #f6f8fa;
+    --indent-step: 25px; 
 }
 
 table {
@@ -147,96 +137,86 @@ td {
     vertical-align: middle;
 }
 
-/* Section */
-td:nth-child(1) {
-    font-family: var(--font-monospace);
-    line-height: 1;
-    white-space: pre;
-    width: 1%;
-}
-
-/*Tag*/
-td:nth-child(2) {
+td.tag {
     font-family: var(--font-monospace);
     font-weight: bold;
     color: var(--tag-color);
 }
 
-/*Name*/
-td:nth-child(3) {
+td.name {
     font-weight: 600;
     color: var(--font-color);
 }
 
 /*Value*/
-td:nth-child(4) {
+td.value {
     font-family: var(--font-monospace);
     color: var(--value-color);
     word-break: break-all;
 }
 
 /* 3. Integer Types (INT, SEQNUM, LENGTH, NUMINGROUP) */
-td:nth-child(4)[data-type=INT],
-td:nth-child(4)[data-type=SEQNUM],
-td:nth-child(4)[data-type=LENGTH],
-td:nth-child(4)[data-type=NUMINGROUP] {
+td.value[data-type=INT],
+td.value[data-type=SEQNUM],
+td.value[data-type=LENGTH],
+td.value[data-type=NUMINGROUP] {
     color: var(--integer-value-color); /* Maps to Pale Green / Mint (#C3E88D) */
 }
 
 /* 4. Float / Decimal Types (PRICE, AMT, QTY, FLOAT, PRICEOFFSET, PERCENTAGE) */
-td:nth-child(4)[data-type=PRICE],
-td:nth-child(4)[data-type=AMT],
-td:nth-child(4)[data-type=QTY],
-td:nth-child(4)[data-type=FLOAT],
-td:nth-child(4)[data-type=PRICEOFFSET],
-td:nth-child(4)[data-type=PERCENTAGE] {
+td.value[data-type=PRICE],
+td.value[data-type=AMT],
+td.value[data-type=QTY],
+td.value[data-type=FLOAT],
+td.value[data-type=PRICEOFFSET],
+td.value[data-type=PERCENTAGE] {
     color: var(--float-value-color); /* Maps to Cyan / Sky Blue (#4FC3F7) */
 }
 
 /* 1. String / Text Types (STRING, EXCHANGE, LOCALMKTDATE, DATA, MONTHYEAR, DAYOFMONTH, COUNTRY) */
-td:nth-child(4)[data-type=STRING],
-td:nth-child(4)[data-type=MULTIPLEVALUESTRING],
-td:nth-child(4)[data-type=MULTIPLESTRINGVALUE],
-td:nth-child(4)[data-type=EXCHANGE],
-td:nth-child(4)[data-type=CURRENCY],
-td:nth-child(4)[data-type=LOCALMKTDATE],
-td:nth-child(4)[data-type=DATA],
-td:nth-child(4)[data-type=MONTHYEAR],
-td:nth-child(4)[data-type=DAYOFMONTH],
-td:nth-child(4)[data-type=COUNTRY] {
+td.value[data-type=STRING],
+td.value[data-type=MULTIPLEVALUESTRING],
+td.value[data-type=MULTIPLESTRINGVALUE],
+td.value[data-type=EXCHANGE],
+td.value[data-type=CURRENCY],
+td.value[data-type=LOCALMKTDATE],
+td.value[data-type=DATA],
+td.value[data-type=MONTHYEAR],
+td.value[data-type=DAYOFMONTH],
+td.value[data-type=COUNTRY] {
     color: var(--string-value-color); /* Maps to Soft Orange / Apricot (#CE9178) */
 }
 
 /* 2. Character Types (CHAR, MULTIPLECHARVALUE) */
-td:nth-child(4)[data-type=CHAR],
-td:nth-child(4)[data-type=MULTIPLECHARVALUE] {
+td.value[data-type=CHAR],
+td.value[data-type=MULTIPLECHARVALUE] {
     color: var(--char-value-color); /* Maps to Hot Pink / Magenta (#FF4081) */
     font-weight: bold; /* Recommended for critical flags like Side, OrdStatus */
 }
 
 /* 5. Boolean Types (BOOLEAN) */
-td:nth-child(4)[data-type=BOOLEAN] {
+td.value[data-type=BOOLEAN] {
     color: var(--boolean-value-color); /* Maps to Lavender / Violet (#BD93F9) */
     font-style: italic;
 }
 
 /* 6. Date & Time Types (UTCDATE, UTCTIMEONLY, UTCTIMESTAMP, TIME) */
-td:nth-child(4)[data-type=UTCDATE],
-td:nth-child(4)[data-type=UTCTIMEONLY],
-td:nth-child(4)[data-type=UTCTIMESTAMP],
-td:nth-child(4)[data-type=TIME] {
+td.value[data-type=UTCDATE],
+td.value[data-type=UTCTIMEONLY],
+td.value[data-type=UTCTIMESTAMP],
+td.value[data-type=TIME] {
     color: var(--datetime-value-color); /* Maps to Muted Teal / Slate (#80CBC4) */
 }
 
 /*Description*/
-td:nth-child(5) {
+td.description {
     font-family: var(--font-monospace);
     color: var(--value-color);
     word-break: break-all;
 }
 
 /* Type */
-td:nth-child(6) {
+td.type {
     font-family: var(--font-monospace);
     color: var(--type-color);
     line-height: 1;
@@ -246,11 +226,70 @@ td:nth-child(6) {
 
 tr:nth-child(even) {
     background-color: color-mix(in srgb, var(--background-color), white 10%);
-}`;
+}
+
+tr[class^="level-"] td.tag {
+    position: relative;
+}
+
+
+tr[class^="level-"] td.tag::before {
+    content: '├──'; 
+    color: #ccc;
+    margin-right: 8px;
+    font-family: monospace;
+}
+
+tr[class^="level-"].group-end td.tag::before {
+    content: '└──'; 
+    color: #ccc;
+    margin-right: 8px;
+    font-family: monospace;
+}
+
+tr.level-0 td.tag::before {
+    content: '';
+    margin-right: 5px;
+}
+
+
+tr.level-0 td.tag {
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+tr.level-1 td.tag {
+    padding-left: calc(10px + var(--indent-step) * 1);
+}
+
+tr.level-2 td.tag {
+    padding-left: calc(10px + var(--indent-step) * 2);
+}
+
+tr.level-3 td.tag {
+    padding-left: calc(10px + var(--indent-step) * 3);
+}
+tr.level-0 td.name {
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+tr.level-1 td.name {
+    padding-left: calc(10px + var(--indent-step) * 1);
+}
+
+tr.level-2 td.name {
+    padding-left: calc(10px + var(--indent-step) * 2);
+}
+
+tr.level-3 td.name {
+    padding-left: calc(10px + var(--indent-step) * 3);
+}
+`;
         this.dom.append(style);
     }
 
-    buildTableBody(table, model) {
+    buildTableBody(table, model, level = 0) {
         for (let i = 0; i < model.length; i++) {
             const item = model[i];
             const tag = item.number;
@@ -259,36 +298,57 @@ tr:nth-child(even) {
             const type = item.type || '';
             const description = type === 'UTCTIMESTAMP' ? this.toLocalTimestamp(value) : item.values ? item.values[value] : '';
             const last = i === model.length - 1;
-            const tr = this.createTableRow(last ? '\u2514\u2500' : '\u251C\u2500', tag, name, value, description, type);
+            const tr = this.createTableRow(tag, name, value, description, type, 'td');
+            tr.classList.add(`level-${level}`);
+            tr.ariaLevel = String(level);
+            if (i === 0 && level > 0) {
+                tr.classList.add('group-start');
+            }
+            if (last && level > 0) {
+                tr.classList.add('group-end');
+            }
             table.appendChild(tr);
+            if (item.groups) {
+                for (const group of item.groups) {
+                    this.buildTableBody(table, group, level + 1);
+                }
+            }
         }
     }
 
-    createTableRow(section, tag = '', name = '', value = '', description = '', type = '', htmlTag = 'td') {
+    createSectionRow(section) {
         const row = document.createElement('tr');
-        const cellSection = document.createElement(htmlTag);
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.textContent = section;
+        cell.classList.add('section');
+        row.append(cell);
+        return row;
+    }
+
+    createTableRow(tag = '', name = '', value = '', description = '', type = '', htmlTag = 'td') {
+        const row = document.createElement('tr');
         const cellTag = document.createElement(htmlTag);
         const cellName = document.createElement(htmlTag);
         const cellValue = document.createElement(htmlTag);
         const cellType = document.createElement(htmlTag);
         const cellDescription = document.createElement(htmlTag);
-        cellSection.textContent = section;
-        cellSection.style.textAlign = 'right';
+        cellTag.classList.add('tag');
         cellTag.textContent = tag;
+        cellName.classList.add('name');
         cellName.textContent = name;
+        cellValue.classList.add('value');
         cellValue.textContent = value;
         cellValue.dataset.type = type;
+        cellType.classList.add('type');
         cellType.textContent = type;
+        cellDescription.classList.add('description');
         cellDescription.textContent = description;
-        row.append(cellSection, cellTag, cellName, cellValue, cellDescription, cellType);
+        row.append(cellTag, cellName, cellValue, cellDescription, cellType);
         return row;
     }
 
     async loadModel() {
-        const header = [];
-        const message = [];
-        const trailer = [];
-
         const version = this.getValueByTag(FixMessageHTMLElement.KnownTags.BeginString);
         let defaultDictionaryFile = FixMessageHTMLElement.VersionFiles[version];
         const transportDictionary = await this.loadDictionary(defaultDictionaryFile);
@@ -296,26 +356,93 @@ tr:nth-child(even) {
             defaultDictionaryFile = FixMessageHTMLElement.VersionFiles[this.detectDataVersion(transportDictionary, version)];
         }
         const dataDictionary = await this.loadDictionary(this.dataDictionary || defaultDictionaryFile);
+        const msgType = this.getValueByTag(FixMessageHTMLElement.KnownTags.MsgType);
+        const isTransportMessage = transportDictionary.messages.hasOwnProperty(msgType);
+        const headerSchema = transportDictionary.header;
+        const messageSchema = isTransportMessage ? transportDictionary.messages[msgType] : dataDictionary.messages[msgType];
+        const trailerSchema = transportDictionary.trailer;
+        const fields = this.pairs.map(([tag, value]) => Object.assign({
+            number: tag,
+            value
+        }, transportDictionary.fieldsByNumber[tag] || dataDictionary.fieldsByNumber[tag]));
 
-        for (const [tag, value] of this.pairs) {
-            const field = Object.assign({value},
-                transportDictionary.fieldsByNumber[tag] || dataDictionary.fieldsByNumber[tag]
-            );
-            if (transportDictionary.tagExistInHeader(tag)) {
-                header.push(field);
-            } else if (transportDictionary.tagExistInTrailer(tag)) {
-                trailer.push(field);
-            } else {
-                message.push(field);
+        const headerFields = [];
+        const messageFields = [];
+        const trailerFields = [];
+        let target = headerFields;
+        for (let field of fields) {
+            if (!headerSchema.hasOwnProperty(field.name) && !trailerSchema.hasOwnProperty(field.name)) {
+                target = messageFields;
+            } else if (trailerSchema.hasOwnProperty(field.name)) {
+                target = trailerFields;
             }
+            target.push(field);
         }
 
-        return {header, message, trailer};
+
+        const header = this.loadModelSection(headerFields, headerSchema);
+        const message = this.loadModelSection(messageFields, messageSchema);
+        const trailer = this.loadModelSection(trailerFields, trailerSchema);
+
+        const model = {header, message, trailer};
+        console.log('model', model);
+        return model;
+    }
+
+    loadModelSection(fields, schema) {
+        this.sectionCursor = 0;
+        const model = [];
+        while (this.sectionCursor < fields.length) {
+            const field = fields[this.sectionCursor++];
+            let fieldSchema = schema[field.name];
+            model.push(field);
+            if (fieldSchema?.group) {
+                let count = parseInt(field.value);
+                field.groups = this.loadGroups(fields, fieldSchema.group, count);
+            }
+        }
+        return model;
+    }
+
+    loadGroups(fields, schema, maxGroups) {
+        const groups = [];
+        const firstFieldName = Object.keys(schema)[0];
+        const groupFieldTags = new Set();
+        let currentGroup = [];
+        let groupCounter = 0;
+        while (this.sectionCursor < fields.length) {
+            const field = fields[this.sectionCursor++];
+            const fieldSchema = schema[field.name];
+            const isFirstInGroup = field.name === firstFieldName;
+            if (isFirstInGroup) {
+                groupCounter++;
+            }
+            if (!(fieldSchema || groupFieldTags.has(field.number)) && groupCounter >= maxGroups) {
+                this.sectionCursor--;
+                break;
+            }
+
+            if (currentGroup.length > 0 && isFirstInGroup) {
+                groups.push(currentGroup);
+                currentGroup = [];
+            }
+            groupFieldTags.add(field.number);
+            currentGroup.push(field);
+
+            if (fieldSchema?.group) {
+                let count = parseInt(field.value);
+                field.groups = this.loadGroups(fields, fieldSchema.group, count);
+            }
+        }
+        if (currentGroup.length > 0) {
+            groups.push(currentGroup);
+        }
+        return groups;
     }
 
     detectDataVersion(transportDictionary) {
         const msgType = this.getValueByTag(FixMessageHTMLElement.KnownTags.MsgType);
-        const message = transportDictionary?.fix?.messages?.message?.find(message => message['@msgtype'] === msgType);
+        const message = transportDictionary.messages[msgType];
         if (message) {
             return this.getValueByTag(FixMessageHTMLElement.KnownTags.BeginString);
         } else {
@@ -412,7 +539,7 @@ tr:nth-child(even) {
 
     toLocalTimestamp(value) {
         // value in format 	20231120-14:30:00.000
-        if (!value){
+        if (!value) {
             return null;
         }
         const year = parseInt(value.substring(0, 4), 10);
@@ -428,11 +555,11 @@ tr:nth-child(even) {
 
 class Dictionary {
     version;
-    header = {};
-    trailer = {};
-    messages = {};
-    fieldsByNumber = {};
-    fieldsByName = {};
+    header = new Map();
+    trailer = new Map();
+    messages = new Map();
+    fieldsByNumber = new Map();
+    fieldsByName = new Map();
     document;
 
     constructor(xml, contentType = 'application/xml') {
@@ -441,35 +568,12 @@ class Dictionary {
         this.parse();
     }
 
-    tagExistInHeader(number) {
-        return this.tagExistIn(number, this.header);
-    }
-
-    tagExistInTrailer(number) {
-        return this.tagExistIn(number, this.trailer);
-    }
-
-    tagExistIn(number, container) {
-        for (let field of Object.values(container)) {
-            if (field.number === number) {
-                return true;
-            }
-            if (field.group) {
-                if (this.tagExistIn(number, field.group)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     parse() {
         let fixElement = this.document.documentElement;
         this.version = `${fixElement.getAttribute('type') || 'FIX'}.${fixElement.getAttribute('major')}.${fixElement.getAttribute('minor')}`
         let fieldsElement = fixElement.getElementsByTagName('fields')[0];
-        this.fieldsByNumber = {};
-        this.fieldsByName = {};
+        this.fieldsByNumber = new Map();
+        this.fieldsByName = new Map();
         for (let fieldElement of fieldsElement.getElementsByTagName('field')) {
             let number = fieldElement.getAttribute('number');
             let name = fieldElement.getAttribute('name');
@@ -490,7 +594,7 @@ class Dictionary {
         this.header = this.parseComponent(fixElement.getElementsByTagName('header')[0]);
         this.trailer = this.parseComponent(fixElement.getElementsByTagName('trailer')[0]);
 
-        this.messages = {};
+        this.messages = new Map();
         let messagesElement = fixElement.getElementsByTagName('messages')[0];
         for (let messageElement of messagesElement.getElementsByTagName('message')) {
             let msgtype = messageElement.getAttribute('msgtype');
@@ -499,7 +603,7 @@ class Dictionary {
     }
 
     parseComponent(root) {
-        let result = {}
+        let result = new Map();
         for (let element of root.children) {
             if (element.tagName === 'field') {
                 let name = element.getAttribute('name');
@@ -529,3 +633,5 @@ class Dictionary {
 }
 
 customElements.define('fix-message', FixMessageHTMLElement);
+
+export default FixMessageHTMLElement;

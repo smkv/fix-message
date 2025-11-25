@@ -7,6 +7,7 @@ The component parses FIX messages and enriches them with data from a FIX diction
 ### Key Features:
 
 *   **Two Display Modes**: View FIX messages as a raw string with custom delimiters or as a comprehensive HTML table.
+*   **Hierarchical Group Display**: Repeating groups are displayed in an indented, tree-like structure, making complex messages with nested components much easier to read.
 *   **FIX Dictionary Support**: Automatically uses the appropriate FIX dictionary based on the message version. It supports FIX versions 4.0 through 5.0 SP2.
 *   **Customizable**: Control the appearance and parsing with attributes like `message`, `delimiter`, and `mode`.
 *   **Intelligent Version Detection**: Automatically detects the data dictionary version from the message content when using FIXT 1.1.
@@ -14,24 +15,24 @@ The component parses FIX messages and enriches them with data from a FIX diction
 
 ## Usage
 
-To use the `fix-message` component, you need to include the `fix-message.mjs` script in your HTML file and then use the `<fix-message>` tag.
+To use the `fix-message` component, you need to include the `fix-message.mjs` script in your HTML file and then use the `<fix-message>` tag. The component will automatically render repeating groups in a tree-like structure.
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
     <title>FIX Message Viewer</title>
-    <script type="module" src="fix-message.mjs"></script>
+    <script type="module" src="src/fix-message.mjs"></script>
 </head>
 <body>
 
-    <h1>FIX Message Display</h1>
+<h1>FIX Message Display</h1>
 
-    <fix-message
-        message="8=FIX.4.2|9=123|35=D|49=SENDER|56=TARGET|34=1|52=20231120-14:30:00.000|11=ORDER1|21=1|38=100|40=2|54=1|55=EUR/USD|59=0|60=20231120-14:30:00.000|10=168"
+<fix-message
+        message="8=FIX.4.2|9=170|35=E|73=2|11=LIST1|55=EUR/USD|54=1|38=100|40=2|68=2|11=ORDER1|54=1|38=50|40=1|11=ORDER2|54=2|38=50|40=2|10=161"
         mode="table"
         delimiter="|"
-    ></fix-message>
+></fix-message>
 
 </body>
 </html>
@@ -58,11 +59,11 @@ If you don't specify a `mode`, the component will render the FIX message as a si
 ```
 
 ### Table Mode
-The `table` mode provides a detailed, human-readable view of the FIX message, with each tag-value pair on its own row. This is ideal for analysis and debugging.
+The `table` mode provides a detailed, human-readable view of the FIX message, with each tag-value pair on its own row. This is ideal for analysis and debugging. Repeating groups will be automatically indented.
 
 ```html
 <fix-message
-    message="8=FIX.4.2|9=123|35=D|..."
+    message="8=FIX.4.2|9=170|35=E|73=2|11=LIST1|...|68=2|11=ORDER1|...|11=ORDER2|...|10=161"
     mode="table"
     delimiter="|"
 ></fix-message>
@@ -100,24 +101,13 @@ If you want to apply your own global CSS styles to the component, you can use th
 ```
 
 ### Using SOH Separator
-FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly. Note that you might need to set the delimiter attribute to `\x01` if it's not the default.
+FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly.
 
 ```html
 <fix-message
     message="8=FIX.4.29=12335=D..."
     mode="table"
 ></fix-message>
-```
-
-You can also set the message and delimiter programmatically in JavaScript:
-
-```javascript
-const fixElement = document.querySelector('fix-message');
-const sohMessage = '8=FIX.4.2\x019=123\x0135=D\x01...';
-fixElement.setAttribute('message', sohMessage);
-// The component uses SOH as the default delimiter if the message contains it,
-// but you can set it explicitly if needed.
-// fixElement.setAttribute('delimiter', '\x01');
 ```
 
 ### Styling with CSS Variables (Shadow DOM)
@@ -132,26 +122,28 @@ When using the default Shadow DOM encapsulation, you can customize the component
         --background-color: #222;
         --font-color: #eee;
         --border-color: #555;
+        --indent-step: 40px; /* Make indentation wider */
     }
 </style>
 ```
 
 Here is a list of the available CSS variables:
 
-| Variable                | Description                                       | Default Value                                           | Color                                                                                                   |
-|-------------------------|---------------------------------------------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| `--font-size`           | The base font size for the table.                 | `14px`                                                  |                                                                                                         |
-| `--font-family`         | The primary font for text content.                | `-apple-system, BlinkMacSystemFont, "Segoe UI", ...`     |                                                                                                         |
-| `--font-monospace`      | The font for monospace content like tags and values.| `'Consolas', 'Menlo', 'Courier New', monospace`         |                                                                                                         |
-| `--font-color`          | The main text color.                              | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
-| `--value-color`         | The default color for values in the table.        | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
-| `--type-color`          | The color for the data type column.               | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
-| `--string-value-color`  | The color for string data types.                  | `#269141`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/269141/269141.png">                   |
-| `--char-value-color`    | The color for character data types.               | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
-| `--integer-value-color` | The color for integer data types.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
-| `--float-value-color`   | The color for float/decimal data types.           | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
-| `--boolean-value-color` | The color for boolean data types.                 | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
-| `--datetime-value-color`| The color for date and time data types.           | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
-| `--tag-color`           | The color for the tag number column.              | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
-| `--border-color`        | The color for table borders.                      | `#e1e4e8`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/e1e4e8/e1e4e8.png">                   |
-| `--background-color`    | The background color for alternating rows.        | `#f6f8fa`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/f6f8fa/f6f8fa.png">                   |
+| Variable                | Description                                          | Default Value                                           | Color                                                                                                   |
+|-------------------------|------------------------------------------------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `--font-size`           | The base font size for the table.                    | `14px`                                                  |                                                                                                         |
+| `--font-family`         | The primary font for text content.                   | `-apple-system, BlinkMacSystemFont, "Segoe UI", ...`     |                                                                                                         |
+| `--font-monospace`      | The font for monospace content like tags and values. | `'Consolas', 'Menlo', 'Courier New', monospace`         |                                                                                                         |
+| `--indent-step`         | The indentation width for each level in a nested group.| `25px`                                                  |                                                                                                         |
+| `--font-color`          | The main text color.                                 | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
+| `--value-color`         | The default color for values in the table.           | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
+| `--type-color`          | The color for the data type column.                  | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
+| `--string-value-color`  | The color for string data types.                     | `#269141`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/269141/269141.png">                   |
+| `--char-value-color`    | The color for character data types.                  | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
+| `--integer-value-color` | The color for integer data types.                    | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
+| `--float-value-color`   | The color for float/decimal data types.              | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
+| `--boolean-value-color` | The color for boolean data types.                    | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
+| `--datetime-value-color`| The color for date and time data types.              | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
+| `--tag-color`           | The color for the tag number column.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
+| `--border-color`        | The color for table borders.                         | `#e1e4e8`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/e1e4e8/e1e4e8.png">                   |
+| `--background-color`    | The background color for alternating rows.           | `#f6f8fa`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/f6f8fa/f6f8fa.png">                   |
