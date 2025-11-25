@@ -1,0 +1,37 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-to-ftp:
+    name: Deploy to FTP
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        # The FTP server address. Stored as a secret for security.
+        server: ${{ secrets.FTP_SERVER }}
+
+        # The FTP username. Stored as a secret.
+        username: ${{ secrets.FTP_USERNAME }}
+
+        # The FTP password. Stored as a secret.
+        password: ${{ secrets.FTP_PASSWORD }}
+
+        # The local directory from your repository to upload.
+        local-dir: ./src/
+
+        # The remote directory on the FTP server to upload files to.
+        # IMPORTANT: Change this to your target directory on the server.
+        server-dir: /
+
+        # This option deletes all files in the server-dir before uploading.
+        # This effectively replaces the old files with the new ones.
+        dangerous-clean-slate: true
