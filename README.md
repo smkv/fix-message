@@ -13,6 +13,8 @@ The component parses FIX messages and enriches them with data from a FIX diction
 *   **Intelligent Version Detection**: Automatically detects the data dictionary version from the message content when using FIXT 1.1.
 *   **Color-Coded Data Types**: The table view uses different colors for various data types (string, integer, float, etc.) to improve readability.
 
+Demo FIX message decoder can be found here https://fix-decoder.samkov.ee
+
 ![fix-message.png](fix-message.png)
 
 ## Usage

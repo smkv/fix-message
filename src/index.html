@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIX message decoder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>FIX message decoder</h1>
+    <form>
+        <div class="mb-3">
+            <label for="fixMessageTextarea" class="form-label">FIX message</label>
+            <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp"></textarea>
+            <div id="fixMessageHelp" class="form-text">Enter a FIX message here</div>
+        </div>
+        <div class="mb-3">
+            <label for="delimiterInput" class="form-label">Delimiter</label>
+            <input type="text" class="form-control" id="delimiterInput" value="|">
+        </div>
+    </form>
+    <fix-message id="fixMessage" message="" mode="table"></fix-message>
+</div>
+<script src="fix-message.mjs" type="module"></script>
+<script>
+    const fixMessageTextarea = document.getElementById('fixMessageTextarea');
+    const delimiterInput = document.getElementById('delimiterInput');
+    const fixMessage = document.getElementById('fixMessage');
+
+    fixMessageTextarea.addEventListener('input', () => {
+        fixMessage.message = fixMessageTextarea.value;
+    });
+
+    delimiterInput.addEventListener('input', () => {
+        fixMessage.delimiter = delimiterInput.value;
+    });
+</script>
+</body>
+</html>
