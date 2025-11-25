@@ -13,6 +13,8 @@ The component parses FIX messages and enriches them with data from a FIX diction
 *   **Intelligent Version Detection**: Automatically detects the data dictionary version from the message content when using FIXT 1.1.
 *   **Color-Coded Data Types**: The table view uses different colors for various data types (string, integer, float, etc.) to improve readability.
 
+![fix-message.png](fix-message.png)
+
 ## Usage
 
 To use the `fix-message` component, you need to include the `fix-message.mjs` script in your HTML file and then use the `<fix-message>` tag. The component will automatically render repeating groups in a tree-like structure.

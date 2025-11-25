@@ -81,7 +81,7 @@ class FixMessageHTMLElement extends HTMLElement {
     async renderTable() {
         const model = await this.loadModel();
         const table = document.createElement('table');
-        table.append(this.createTableRow('Tag', 'Name', 'Value', 'Description', 'Type', 'th'));
+        table.append(this.createTableRow('Tag', 'Tag Name', 'Value', 'Value Description', 'Value Type', 'th'));
         table.append(this.createSectionRow('Header'));
         this.buildTableBody(table, model.header);
         table.append(this.createSectionRow('Message'));
