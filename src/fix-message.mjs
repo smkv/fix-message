@@ -122,6 +122,7 @@ class FixMessageHTMLElement extends HTMLElement {
     --tag-color: #0366d6;
     --border-color: #e1e4e8;
     --background-color: #f6f8fa;
+    --even-backgroud-color: color-mix(in srgb, var(--background-color), white 10%);
     --indent-step: 25px; 
 }
 
@@ -130,6 +131,10 @@ table {
     font-family: var(--font-family);
     color: var(--font-color);
     border: 1px solid var(--border-color);
+}
+
+tr {
+    background-color: var(--background-color);
 }
 
 th {
@@ -156,32 +161,28 @@ td.name {
     color: var(--font-color);
 }
 
-/*Value*/
 td.value {
     font-family: var(--font-monospace);
     color: var(--value-color);
     word-break: break-all;
 }
 
-/* 3. Integer Types (INT, SEQNUM, LENGTH, NUMINGROUP) */
 td.value[data-type=INT],
 td.value[data-type=SEQNUM],
 td.value[data-type=LENGTH],
 td.value[data-type=NUMINGROUP] {
-    color: var(--integer-value-color); /* Maps to Pale Green / Mint (#C3E88D) */
+    color: var(--integer-value-color);
 }
 
-/* 4. Float / Decimal Types (PRICE, AMT, QTY, FLOAT, PRICEOFFSET, PERCENTAGE) */
 td.value[data-type=PRICE],
 td.value[data-type=AMT],
 td.value[data-type=QTY],
 td.value[data-type=FLOAT],
 td.value[data-type=PRICEOFFSET],
 td.value[data-type=PERCENTAGE] {
-    color: var(--float-value-color); /* Maps to Cyan / Sky Blue (#4FC3F7) */
+    color: var(--float-value-color);
 }
 
-/* 1. String / Text Types (STRING, EXCHANGE, LOCALMKTDATE, DATA, MONTHYEAR, DAYOFMONTH, COUNTRY) */
 td.value[data-type=STRING],
 td.value[data-type=MULTIPLEVALUESTRING],
 td.value[data-type=MULTIPLESTRINGVALUE],
@@ -192,38 +193,33 @@ td.value[data-type=DATA],
 td.value[data-type=MONTHYEAR],
 td.value[data-type=DAYOFMONTH],
 td.value[data-type=COUNTRY] {
-    color: var(--string-value-color); /* Maps to Soft Orange / Apricot (#CE9178) */
+    color: var(--string-value-color);
 }
 
-/* 2. Character Types (CHAR, MULTIPLECHARVALUE) */
 td.value[data-type=CHAR],
 td.value[data-type=MULTIPLECHARVALUE] {
-    color: var(--char-value-color); /* Maps to Hot Pink / Magenta (#FF4081) */
-    font-weight: bold; /* Recommended for critical flags like Side, OrdStatus */
+    color: var(--char-value-color);
+    font-weight: bold;
 }
 
-/* 5. Boolean Types (BOOLEAN) */
 td.value[data-type=BOOLEAN] {
-    color: var(--boolean-value-color); /* Maps to Lavender / Violet (#BD93F9) */
+    color: var(--boolean-value-color);
     font-style: italic;
 }
 
-/* 6. Date & Time Types (UTCDATE, UTCTIMEONLY, UTCTIMESTAMP, TIME) */
 td.value[data-type=UTCDATE],
 td.value[data-type=UTCTIMEONLY],
 td.value[data-type=UTCTIMESTAMP],
 td.value[data-type=TIME] {
-    color: var(--datetime-value-color); /* Maps to Muted Teal / Slate (#80CBC4) */
+    color: var(--datetime-value-color);
 }
 
-/*Description*/
 td.description {
     font-family: var(--font-monospace);
     color: var(--value-color);
     word-break: break-all;
 }
 
-/* Type */
 td.type {
     font-family: var(--font-monospace);
     color: var(--type-color);
@@ -233,7 +229,7 @@ td.type {
 }
 
 tr:nth-child(even) {
-    background-color: color-mix(in srgb, var(--background-color), white 10%);
+    background-color: var(--even-backgroud-color);
 }
 
 tr[class^="level-"] td.tag {

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blue Style</title>
+    <style>
+        body {
+            background-color: #003f5c;
+        }
+
+        fix-message {
+            --background-color: #003f5c;
+            --border-color: #0072a8;
+            --font-color: #ffffff;
+            --tag-color: #ffa600;
+            --value-color: #ffffff;
+            --string-value-color: #f95d6a;
+            --char-value-color: #ff7c43;
+            --integer-value-color: #ffa600;
+            --float-value-color: #ffa600;
+            --boolean-value-color: #f95d6a;
+            --datetime-value-color: #f95d6a;
+            --type-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+<fix-message
+        delimiter="|"
+        mode="table"
+        message="8=FIXT.1.1|9=325|35=i|34=105|49=MARKET_MAKER|56=EXCHANGE|52=20231120-14:30:00.000|117=QID12345|296=1|302=1|295=1|299=ENTRY_A|55=GOOG|167=MLEG|655=1|132=50.00|133=51.00|555=2|600=GOOG|602=OC|610=20251000|624=1|600=GOOG|602=OC|610=20251100|624=2|10=154|">
+</fix-message>
+<script src="../src/fix-message.mjs" type="module"></script>
+</body>
+</html>
