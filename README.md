@@ -47,7 +47,7 @@ To use the `fix-message` component, you need to include the `fix-message.mjs` sc
 *   `message`: The FIX message string to be displayed. The default delimiter is the SOH character (ASCII 1).
 *   `delimiter`: The delimiter used in the `message` string. The default is `|`.
 *   `mode`: The display mode. Can be `string` or `table`. If not specified, it will render as a string.
-*   `data-dictionary`: (Optional) The path to a custom data dictionary XML file. If not provided, the component will use the built-in dictionaries based on the message's `BeginString(8)` value.
+*   `data-dictionary`: (Optional) The path to a custom data dictionary XML file. If not provided, the component will use the built-in dictionaries based on the message's `BeginString(8)` value. The format should be the same as the QuickFixJ XML dictionary format.
 *   `use-host-dom`: (Optional) If present, the component will render directly into the host element's DOM instead of its shadow DOM. This is useful for applying global styles.
 
 ## Examples
@@ -74,7 +74,7 @@ The `table` mode provides a detailed, human-readable view of the FIX message, wi
 ```
 
 ### Using a Custom Dictionary
-For proprietary FIX implementations or custom tags, you can provide a path to your own dictionary file. This is useful when working with non-standard FIX messages.
+For proprietary FIX implementations or custom tags, you can provide a path to your own dictionary file. This is useful when working with non-standard FIX messages. The dictionary file should be in the QuickFixJ XML format.
 
 ```html
 <fix-message
@@ -151,3 +151,7 @@ Here is a list of the available CSS variables:
 | `--tag-color`           | The color for the tag number column.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
 | `--border-color`        | The color for table borders.                         | `#e1e4e8`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/e1e4e8/e1e4e8.png">                   |
 | `--background-color`    | The background color for alternating rows.           | `#f6f8fa`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/f6f8fa/f6f8fa.png">                   |
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

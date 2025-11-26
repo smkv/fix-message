@@ -1,3 +1,12 @@
+/**
+ * fix-message Web Component
+ *
+ * Copyright (c) 2025 Andrei Samkov
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 class FixMessageHTMLElement extends HTMLElement {
     static observedAttributes = ['message', 'delimiter', 'data-dictionary', 'mode'];
     static SOH = String.fromCharCode(1);
@@ -291,39 +300,41 @@ tr.level-3 td.name {
 
     buildTableBody(table, model, level = 0) {
         for (let i = 0; i < model.length; i++) {
-            const item = model[i];
-            const tag = item.number;
-            const value = item.value;
-            const name = item.name || '';
-            const type = item.type || '';
-            let description;
-            if (type === 'UTCTIMESTAMP') {
-                description = this.toLocalTimestamp(value);
-            } else if (type === 'LOCALMKTDATE') {
-                description = this.toLocalDate(value);
-            } else if (type === 'BOOLEAN') {
-                description = value === 'Y' ? 'Yes (positive)' : 'No (negative)';
-            } else if (type === 'MONTHYEAR') {
-                description = this.toLocalYearMonth(value);
-            } else {
-                description = item.values ? item.values[value] : '';
-            }
-            const last = i === model.length - 1;
+            const isFirst = i === 0;
+            const isLast = i === model.length - 1;
+            const isGroup = level > 0;
+            const field = model[i];
+            const tag = field.number;
+            const value = field.value;
+            const name = field.name || '';
+            const type = field.type || '';
+            const description = this.valueDescription(value, type, field.values);
             const tr = this.createTableRow(tag, name, value, description, type, 'td');
-            tr.classList.add(`level-${level}`);
             tr.ariaLevel = String(level);
-            if (i === 0 && level > 0) {
-                tr.classList.add('group-start');
-            }
-            if (last && level > 0) {
-                tr.classList.add('group-end');
-            }
+            tr.classList.add(`level-${level}`);
+            tr.classList.toggle('group-start', isFirst && isGroup);
+            tr.classList.toggle('group-end', isLast && isGroup);
             table.appendChild(tr);
-            if (item.groups) {
-                for (const group of item.groups) {
+            if (field.groups) {
+                for (const group of field.groups) {
                     this.buildTableBody(table, group, level + 1);
                 }
             }
+        }
+    }
+
+    valueDescription(value, type, values) {
+        switch (type) {
+            case 'BOOLEAN':
+                return value === 'Y' ? 'Yes (positive)' : 'No (negative)';
+            case 'UTCTIMESTAMP':
+                return this.utcTimestampToLocalDateTime(value);
+            case 'LOCALMKTDATE':
+                return this.localDate(value);
+            case 'MONTHYEAR':
+                return this.monthYearToLocal(value);
+            default:
+                return values ? values[value] : '';
         }
     }
 
@@ -548,7 +559,7 @@ tr.level-3 td.name {
         }
     }
 
-    toLocalTimestamp(value) {
+    utcTimestampToLocalDateTime(value) {
         // value in format 	20231120-14:30:00.000
         if (!value) {
             return null;
@@ -563,7 +574,7 @@ tr.level-3 td.name {
         return new Date(Date.UTC(year, month, day, hour, minute, second, millisecond));
     }
 
-    toLocalDate(value) {
+    localDate(value) {
         // value in format 	20231120
         if (!value) {
             return null;
@@ -574,7 +585,7 @@ tr.level-3 td.name {
         return new Date(year, month, day);
     }
 
-    toLocalYearMonth(value) {
+    monthYearToLocal(value) {
         // value in format 	202311
         if (!value) {
             return null;
