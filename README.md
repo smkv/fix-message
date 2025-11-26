@@ -156,4 +156,4 @@ Here is a list of the available CSS variables:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](src/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](src/LICENSE.txt) file for details.
