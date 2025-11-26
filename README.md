@@ -16,6 +16,7 @@ The component parses FIX messages and enriches them with data from a FIX diction
 Demo FIX message decoder can be found here https://fix-decoder.samkov.ee
 
 ![fix-message.png](fix-message.png)
+[<img alt="Website Deployed for Free with FTP Deploy Action" src="https://img.shields.io/badge/Website deployed for free with-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=297FA9">](https://github.com/SamKirkland/FTP-Deploy-Action)
 
 ## Usage
 
@@ -154,4 +155,4 @@ Here is a list of the available CSS variables:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](src/LICENSE) file for details.
