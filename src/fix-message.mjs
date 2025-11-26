@@ -504,7 +504,11 @@ tr.level-3 td.name {
     }
 
     get messageWithDelimiter() {
-        return this.message.replaceAll(FixMessageHTMLElement.SOH, this.delimiter);
+        let msg = this.message.replaceAll(FixMessageHTMLElement.SOH, this.delimiter);
+        if (!this.delimiter.includes('\n')) {
+            msg = msg.replaceAll('\r?\n\r?', '');
+        }
+        return msg;
     }
 
     get delimiter() {
