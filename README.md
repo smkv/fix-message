@@ -14,9 +14,10 @@ The component parses FIX messages and enriches them with data from a FIX diction
 *   **Color-Coded Data Types**: The table view uses different colors for various data types (string, integer, float, etc.) to improve readability.
 
 Demo FIX message decoder can be found here https://fix-decoder.samkov.ee
+[<img alt="Website Deployed for Free with FTP Deploy Action" src="https://img.shields.io/badge/Website deployed for free with-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=297FA9">](https://github.com/SamKirkland/FTP-Deploy-Action)
+
 
 ![fix-message.png](fix-message.png)
-[<img alt="Website Deployed for Free with FTP Deploy Action" src="https://img.shields.io/badge/Website deployed for free with-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=297FA9">](https://github.com/SamKirkland/FTP-Deploy-Action)
 
 ## Usage
 
