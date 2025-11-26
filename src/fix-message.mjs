@@ -277,21 +277,36 @@ tr.level-2 td.tag {
 tr.level-3 td.tag {
     padding-left: calc(10px + var(--indent-step) * 3);
 }
-tr.level-0 td.name {
-    padding-left: 10px;
-    font-weight: bold;
+
+tr[class^="level-"] td.name::before {
+    content: '│ '; 
+    color: #ccc;
+    margin-right: 8px;
+    font-family: monospace;
+}
+
+tr[class="level-0"] td.name::before {
+    content: '';
+}
+
+tr[class^="level-"].group-start td.name::before {
+    content: '┌─'; 
+}
+
+tr[class^="level-"].group-end td.name::before {
+    content: '└─'; 
 }
 
 tr.level-1 td.name {
-    padding-left: calc(10px + var(--indent-step) * 1);
+    padding-left: calc(var(--indent-step) * 1);
 }
 
 tr.level-2 td.name {
-    padding-left: calc(10px + var(--indent-step) * 2);
+    padding-left: calc(var(--indent-step) * 2);
 }
 
 tr.level-3 td.name {
-    padding-left: calc(10px + var(--indent-step) * 3);
+    padding-left: calc(var(--indent-step) * 3);
 }
 `;
         this.dom.append(style);
@@ -596,7 +611,17 @@ tr.level-3 td.name {
         const year = parseInt(value.substring(0, 4), 10);
         const month = parseInt(value.substring(4, 6), 10) - 1; // Month is 0-indexed
         const date = new Date(year, month);
-        return date.toLocaleString(undefined, {year: 'numeric', month: 'long'});
+        let localDate = date.toLocaleString(undefined, {year: 'numeric', month: 'long'});
+        if (value.length === 8) {
+            const day = value.substring(6, 8);
+            if (day.toLowerCase().startsWith('w')) {
+                return `Week of ${localDate}, ${day.substring(1)}`
+            }
+            if (day !== '00') {
+                return this.localDate(value);
+            }
+        }
+        return localDate;
     }
 }
 
