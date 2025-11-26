@@ -582,7 +582,7 @@ tr.level-3 td.name {
         const year = parseInt(value.substring(0, 4), 10);
         const month = parseInt(value.substring(4, 6), 10) - 1; // Month is 0-indexed
         const day = parseInt(value.substring(6, 8), 10);
-        return new Date(year, month, day);
+        return new Date(year, month, day).toLocaleDateString();
     }
 
     monthYearToLocal(value) {
