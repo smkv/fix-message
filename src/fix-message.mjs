@@ -473,10 +473,11 @@ tr.level-3 td.name {
     }
 
     detectDataVersion(transportDictionary) {
+        const beginString = this.getValueByTag(FixMessageHTMLElement.KnownTags.BeginString);
         const msgType = this.getValueByTag(FixMessageHTMLElement.KnownTags.MsgType);
         const message = transportDictionary.messages[msgType];
         if (message) {
-            return this.getValueByTag(FixMessageHTMLElement.KnownTags.BeginString);
+            return beginString;
         } else {
             const applVerID = this.getValueByTag(FixMessageHTMLElement.KnownTags.ApplVerID);
             if (applVerID && FixMessageHTMLElement.ApplVerIDs[applVerID]) {
@@ -491,6 +492,8 @@ tr.level-3 td.name {
                 return 'FIX.5.0';
             } else if (this.tags.map(Number).find(tag => tag >= 1400 && tag < 5000)) {
                 return 'FIX.5.0 SP2';
+            } else if (beginString === 'FIXT.1.1') {
+                return 'FIX.5.0';
             }
         }
         return 'FIX.4.4';
