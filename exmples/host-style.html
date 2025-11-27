@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <title>Host style</title>
     <style>
-        :root{
+        :root {
             --indent-step: 20px;
+            --bg-trunk: url("data:image/svg+xml,<svg width='20' height='100' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='0' x2='1' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
+            --bg-branch: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
+
+            --bg-trunck-branch: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='1' y1='1' x2='20' y2='0' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
+
+            --bg-branch-close: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
         }
 
         body {
@@ -76,35 +82,75 @@
         td.tag {
             font-weight: bold;
             color: #fb4f00;
+            background-repeat: no-repeat;
+            background-position-y: 0;
+            padding-left: 20px;
+            border: 0;
         }
 
-
-        tr[class^="level-"] td.tag::before {
-            content: '├─';
-            color: #d1c6c4;
-            margin-right: 8px;
-            font-family: monospace;
+        tr.level-0 td.tag {
+            background-image: var(--bg-branch);
         }
 
-        tr[class^="level-"].group-end td.tag::before {
-            content: '└─';
+        tr.level-1 td.tag {
+            background-image: var(--bg-trunk), var(--bg-branch);
+            background-position: 0, 20px;
         }
 
-        tr.level-0 td.tag::before {
-            content: '';
-            margin-right: 0;
+        tr.level-2 td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunk), var(--bg-branch);
+            background-position: 0, 20px, 40px;
+        }
+
+        tr.level-3 td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunk), var(--bg-branch);
+            background-position: 0, 20px, 40px, 60px;
+        }
+
+        tr.level-0:last-child td.tag {
+            background-image: var(--bg-branch-close);
+        }
+
+        tr.level-1.group-end td.tag {
+            background-image: var(--bg-trunk), var(--bg-branch-close);
+            background-position: 0, 20px;
+        }
+
+        tr.level-2.group-end td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunk), var(--bg-branch-close);
+            background-position: 0, 20px, 40px;
+        }
+
+        tr.level-3.group-end td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunk), var(--bg-branch-close);
+            background-position: 0, 20px, 40px, 60px;
+        }
+
+        tr.level-1.group-start td.tag {
+            background-image: var(--bg-trunck-branch), var(--bg-branch);
+            background-position: 0, 20px;
+        }
+
+        tr.level-2.group-start td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunck-branch), var(--bg-branch);
+            background-position: 0, 20px, 40px;
+        }
+
+        tr.level-3.group-start td.tag {
+            background-image: var(--bg-trunk), var(--bg-trunck-branch), var(--bg-branch);
+            background-position: 0, 20px, 40px, 60px;
         }
 
         tr.level-1 td.tag, tr.level-1 td.name {
-            padding-left: calc(10px + var(--indent-step) * 1);
+            padding-left: calc(20px + var(--indent-step) * 1);
         }
 
         tr.level-2 td.tag, tr.level-2 td.name {
-            padding-left: calc(10px + var(--indent-step) * 2);
+            padding-left: calc(20px + var(--indent-step) * 2);
         }
 
         tr.level-3 td.tag, tr.level-3 td.name {
-            padding-left: calc(10px + var(--indent-step) * 3);
+            padding-left: calc(20px + var(--indent-step) * 3);
         }
 
         td.name {
