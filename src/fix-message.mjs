@@ -141,6 +141,7 @@ class FixMessageHTMLElement extends HTMLElement {
     --tag-color: #0366d6;
     --border-color: #e1e4e8;
     --background-color: #f6f8fa;
+    --tree-color: #cccccc;
     --even-backgroud-color: color-mix(in srgb, var(--background-color), white 10%);
     --indent-step: 25px; 
 }
@@ -280,14 +281,14 @@ tr[class^="level-"] td.tag {
 
 tr[class^="level-"] td.tag::before {
     content: '├──'; 
-    color: #ccc;
+    color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
 }
 
 tr[class^="level-"].group-end td.tag::before {
     content: '└──'; 
-    color: #ccc;
+    color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
 }
@@ -315,9 +316,9 @@ tr.level-3 td.tag {
     padding-left: calc(10px + var(--indent-step) * 3);
 }
 
-tr[class^="level-"] td.name::before {
+tr.level-1 td.name::before, tr.level-2 td.name::before {
     content: '│ '; 
-    color: #ccc;
+    color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
 }
