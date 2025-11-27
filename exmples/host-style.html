@@ -39,18 +39,15 @@
         }
 
         table {
-            border-collapse: collapse;
             border-spacing: 0;
             font-size: 15px;
             margin: 10px 0 0;
             width: 100%;
-            position: relative;
         }
 
         th {
             background-color: #fff;
             border-bottom: 2px solid #ff5f00;
-            box-shadow: 0 2px 0 0 #ff5f00;
             padding: 13px 10px;
             text-align: left;
             position: sticky;
@@ -70,6 +67,10 @@
             font-weight: bold;
             color: #fb4f00;
             padding: 15px 10px;
+        }
+
+        tr:not(:first-child) td.section {
+            border-top: 1px solid #ff5f00;
         }
 
         td.tag {
