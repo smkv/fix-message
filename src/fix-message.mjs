@@ -589,7 +589,7 @@ tr.level-3 td.name {
         const second = parseInt(value.substring(15, 17), 10);
         const millisecond = value.length > 17 ? parseInt(value.substring(18, 21), 10) : 0;
         const date = new Date(Date.UTC(year, month, day, hour, minute, second, millisecond));
-        return date.toLocaleString();
+        return `${date.toLocaleString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
     }
 
     localDate(value) {
