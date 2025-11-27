@@ -100,7 +100,26 @@ class FixMessageHTMLElement extends HTMLElement {
         if (!this.useHostDom) {
             this.appendStyle();
         }
-        this.dom.append(table);
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        this.pairs.forEach(([tag, value], index) => {
+            const pair = document.createElement('span');
+            pair.classList.add('pair');
+            pair.textContent = `${tag}=${value}`;
+            pair.dataset.index = index;
+            pair.addEventListener('mouseover', e => {
+                this.table.querySelector(`tr[data-index="${index}"]`).classList.add('highlight');
+            });
+            pair.addEventListener('mouseout', e => {
+                this.table.querySelector(`tr[data-index="${index}"]`).classList.remove('highlight');
+            });
+            messageDiv.append(pair);
+            messageDiv.append(this.delimiter);
+        });
+
+        this.dom.append(messageDiv, table);
+        this.table = table;
+        this.messageDiv = messageDiv;
     }
 
     appendStyle() {
@@ -125,6 +144,28 @@ class FixMessageHTMLElement extends HTMLElement {
     --even-backgroud-color: color-mix(in srgb, var(--background-color), white 10%);
     --indent-step: 25px; 
 }
+
+div.message {
+    font-family: var(--font-monospace);
+    word-break: break-all;
+    background: var(--background-color);
+    color: var( --font-color);
+}
+
+div.message span.pair {
+    background: var(--background-color);
+    color: var( --font-color);
+    display: inline-block;
+}
+
+div.message span.pair:hover, div.message span.pair.highlight {
+    filter: invert(100%);
+}
+
+table tr.highlight {
+    filter: invert(100%);
+}
+
 
 table {
     border-collapse: collapse;
@@ -321,9 +362,18 @@ tr.level-3 td.name {
             const description = this.valueDescription(value, type, field.values);
             const tr = this.createTableRow(tag, name, value, description, type, 'td');
             tr.ariaLevel = String(level);
+            tr.dataset.index = field.index;
             tr.classList.add(`level-${level}`);
             tr.classList.toggle('group-start', isFirst && isGroup);
             tr.classList.toggle('group-end', isLast && isGroup);
+
+            tr.addEventListener('mouseover', e => {
+                this.messageDiv.querySelector('span[data-index="' + field.index + '"]').classList.add('highlight');
+            });
+            tr.addEventListener('mouseout', e => {
+                this.messageDiv.querySelector('span[data-index="' + field.index + '"]').classList.remove('highlight');
+            });
+
             table.appendChild(tr);
             if (field.groups) {
                 for (const group of field.groups) {
@@ -393,8 +443,9 @@ tr.level-3 td.name {
         const headerSchema = transportDictionary.header;
         const messageSchema = isTransportMessage ? transportDictionary.messages[msgType] : dataDictionary.messages[msgType];
         const trailerSchema = transportDictionary.trailer;
-        const fields = this.pairs.map(([tag, value]) => Object.assign({
+        const fields = this.pairs.map(([tag, value], index) => Object.assign({
             number: tag,
+            index,
             value
         }, transportDictionary.fieldsByNumber[tag] || dataDictionary.fieldsByNumber[tag]));
 

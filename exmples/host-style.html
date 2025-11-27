@@ -7,7 +7,8 @@
         :root {
             --indent-step: 20px;
             --bg-trunk: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='0' x2='1' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
-            --bg-branch: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>"); --bg-branch-start: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='25' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
+            --bg-branch: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
+            --bg-branch-start: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='25' x2='0' y2='50' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
             --bg-branch-close: url("data:image/svg+xml,<svg width='20' height='50' viewBox='0 0 20 50' xmlns='http://www.w3.org/2000/svg'><line x1='1' y1='1' x2='0' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/><line x1='0' y1='25' x2='15' y2='25' stroke='%23d1c6c4' stroke-width='1.5' stroke-dasharray='2, 3'/></svg>");
         }
 
@@ -159,6 +160,26 @@
         td.type {
             color: #917877;
         }
+
+        div.message {
+            font-family: monospace;
+            word-break: break-all;
+            background: #fff;
+            color: #512b2b;
+        }
+
+        div.message span.pair {
+            background: #fff;
+            color: #512b2b;
+        }
+
+        div.message span.pair:hover, div.message span.pair.highlight {
+            filter: invert(100%);
+        }
+
+        table tr.highlight {
+            background-color: #fbf3f7;
+        }
     </style>
 </head>
 <body>
@@ -168,7 +189,6 @@
 </header>
 <main>
     <section>
-        <code style="word-break: break-all;">8=FIX.4.4|9=413|35=AE|34=2|52=20051121-08:39:50|49=MEFF|50=C2|56=A899|57=351|571=003C4E2B0000|150=F|818=101|527=FI0000000001|5681=M|570=Y|55=MNZ05|32=10|31=9365|75=20050330|60=20050330-07:39:21|768=1|769=20050330-07:39:21|770=3|63=0|881=101|880=101|552=1|54=2|37=050330OA89935100002|198=FI2|453=1|448=A899|447=D|452=13|1=00101|381=93650|77=O|136=2|137=0.00|138=EUR|139=4|891=0|137=1.50|138=EUR|139=7|891=0|568=TCRYY1|325=N|912=N|10=048|</code>
         <fix-message
                 delimiter="|"
                 mode="table"
