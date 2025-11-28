@@ -371,7 +371,7 @@ tr.level-3 td.name {
             const value = field.value;
             const name = field.name || '';
             const type = field.type || '';
-            const description = this.valueDescription(value, type, field.values);
+            const description = this.valueDescription(value, type, field.values, field.number);
             const tr = this.createTableRow(tag, name, value, description, type, 'td');
             tr.ariaLevel = String(level);
             tr.dataset.index = field.index;
@@ -395,7 +395,11 @@ tr.level-3 td.name {
         }
     }
 
-    valueDescription(value, type, values) {
+    valueDescription(value, type, values, tag) {
+        if (tag === FixMessageHTMLElement.KnownTags.CheckSum) {
+            const result = this.validateFixChecksum();
+            return result.isValid ? 'Checksum valid' : `Invalid checksum, expected ${result.calculated}`;
+        }
         switch (type) {
             case 'BOOLEAN':
                 return value === 'Y' ? 'True/Yes' : 'False/No';
@@ -815,6 +819,26 @@ tr.level-3 td.name {
             );
         }
         return `${date.toLocaleTimeString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+    }
+
+    validateFixChecksum() {
+        const expectedChecksum = this.getValueByTag(FixMessageHTMLElement.KnownTags.CheckSum);
+        let sum = 0;
+        const dataToCalculate = this.pairs
+            .filter(([tag]) => tag !== FixMessageHTMLElement.KnownTags.CheckSum)
+            .map(([tag, value]) => `${tag}=${value}${FixMessageHTMLElement.SOH}`)
+            .join('');
+        for (let i = 0; i < dataToCalculate.length; i++) {
+            sum += dataToCalculate.charCodeAt(i);
+        }
+        const calculatedValue = sum % 256;
+        const formattedChecksum = calculatedValue.toString().padStart(3, '0');
+
+        return {
+            isValid: formattedChecksum === expectedChecksum,
+            expected: expectedChecksum,
+            calculated: formattedChecksum
+        };
     }
 }
 
