@@ -8,6 +8,7 @@
 import {countries} from "./countries.mjs";
 import {currencies} from "./currencies.mjs";
 import {exchanges} from "./exchanges.mjs";
+import {languages} from "./languages.mjs";
 
 class FixMessageHTMLElement extends HTMLElement {
     static observedAttributes = ['message', 'delimiter', 'data-dictionary', 'mode'];
@@ -417,6 +418,8 @@ tr.level-3 td.name {
                 return value ? countries[value.toUpperCase()] || '' : '';
             case 'EXCHANGE':
                 return value ? exchanges[value.toUpperCase()] || '' : '';
+            case 'LANGUAGE':
+                return value ? languages[value.toUpperCase()] || '' : '';
             default:
                 return values ? values[value] : '';
         }
