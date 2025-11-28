@@ -5,6 +5,9 @@
  *
  * This source code is licensed under the MIT license found in the LICENSE.txt file.
  */
+import {countries} from "./countries.mjs";
+import {currencies} from "./currencies.mjs";
+import {exchanges} from "./exchanges.mjs";
 
 class FixMessageHTMLElement extends HTMLElement {
     static observedAttributes = ['message', 'delimiter', 'data-dictionary', 'mode'];
@@ -144,30 +147,25 @@ class FixMessageHTMLElement extends HTMLElement {
     --background-color: #f6f8fa;
     --tree-color: #cccccc;
     --even-backgroud-color: color-mix(in srgb, var(--background-color), white 10%);
-    --indent-step: 25px; 
+    --indent-step: 25px;
 }
 
 div.message {
     font-family: var(--font-monospace);
     word-break: break-all;
     background: var(--background-color);
-    color: var( --font-color);
+    color: var(--font-color);
 }
 
 div.message span.pair {
     background: var(--background-color);
-    color: var( --font-color);
+    color: var(--font-color);
     display: inline-block;
 }
 
 div.message span.pair:hover, div.message span.pair.highlight {
     filter: invert(100%);
 }
-
-table tr.highlight {
-    filter: invert(100%);
-}
-
 
 table {
     border-collapse: collapse;
@@ -399,13 +397,26 @@ tr.level-3 td.name {
     valueDescription(value, type, values) {
         switch (type) {
             case 'BOOLEAN':
-                return value === 'Y' ? 'Yes (positive)' : 'No (negative)';
+                return value === 'Y' ? 'Yes' : 'No';
             case 'UTCTIMESTAMP':
                 return this.utcTimestampToLocalDateTime(value);
             case 'LOCALMKTDATE':
+            case 'UTCDATEONLY':
                 return this.localDate(value);
             case 'MONTHYEAR':
                 return this.monthYearToLocal(value);
+            case 'TZTIMEONLY':
+                return value; // todo
+            case 'TZTIMESTAMP':
+                return value; // todo
+            case 'TENOR':
+                return this.tenorDescription(value);
+            case 'CURRENCY':
+                return value ? currencies[value.toUpperCase()] || '' : '';
+            case 'COUNTRY':
+                return value ? countries[value.toUpperCase()] || '' : '';
+            case 'EXCHANGE':
+                return value ? exchanges[value.toUpperCase()] || '' : '';
             default:
                 return values ? values[value] : '';
         }
@@ -686,6 +697,23 @@ tr.level-3 td.name {
             }
         }
         return localDate;
+    }
+
+    tenorDescription(value) {
+        const units = {
+            D: 'Day',
+            W: 'Week',
+            M: 'Month',
+            Y: 'Year'
+        };
+        const regex = /([DWMY])(\\d+)/gi
+        if (regex.test(value)) {
+            const exec = regex.exec(value);
+            const unit = units[exec[1]];
+            const count = exec[2];
+            return `${count} ${unit}${count > 1 ? 's' : ''}`;
+        }
+        return '';
     }
 }
 
