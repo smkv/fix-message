@@ -24,12 +24,34 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
                 always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|
             </div>
         </div>
-        <div class="mb-3">
-            <label for="delimiterInput" class="form-label">Delimiter</label>
-            <input type="text" class="form-control" id="delimiterInput" value="|" size="1" maxlength="1"
-                   style="width: 40px;">
+        <div class="mb-3 row">
+            <div class="col">
+                <label for="delimiterInput" class="form-label">Delimiter</label>
+                <input type="text" class="form-control" id="delimiterInput" value="|" size="1" maxlength="1"
+                       style="width: 40px;">
+            </div>
+            <div class="col">
+                <label for="dataDictionarySelect" class="form-label">Data Dictionary</label>
+                <select class="form-select" id="dataDictionarySelect">
+                    <option value="auto">Auto</option>
+                    <option value="FIX50SP2.xml">FIX.5.0 SP2</option>
+                    <option value="FIX50SP1.xml">FIX.5.0 SP1</option>
+                    <option value="FIX50.xml">FIX.5.0</option>
+                    <option value="FIX44.xml">FIX.4.4</option>
+                    <option value="FIX43.xml">FIX.4.3</option>
+                    <option value="FIX42.xml">FIX.4.2</option>
+                    <option value="FIX41.xml">FIX.4.1</option>
+                    <option value="FIX40.xml">FIX.4.0</option>
+                    <option value="custom">Custom...</option>
+                </select>
+            </div>
+            <div class="col fade">
+                <label for="customDataDictionaryFile" class="form-label">Custom Data Dictionary</label>
+                <input type="file" class="form-control" id="customDataDictionaryFile" accept=".xml" disabled>
+            </div>
         </div>
     </form>
+    <hr/>
     <fix-message id="fixMessage" message="" mode="table"></fix-message>
     <hr/>
     <div class="text-muted">
@@ -47,6 +69,9 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
 <script>
     const fixMessageTextarea = document.getElementById('fixMessageTextarea');
     const delimiterInput = document.getElementById('delimiterInput');
+    const dataDictionarySelect = document.getElementById('dataDictionarySelect');
+    const customDataDictionaryFile = document.getElementById('customDataDictionaryFile');
+    const customDataDictionaryColumn = customDataDictionaryFile.closest('div.col');
     const fixMessage = document.getElementById('fixMessage');
 
     fixMessageTextarea.addEventListener('input', () => {
@@ -64,6 +89,37 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
 
     delimiterInput.addEventListener('input', () => {
         fixMessage.delimiter = delimiterInput.value;
+    });
+
+    dataDictionarySelect.addEventListener('change', () => {
+        const value = dataDictionarySelect.value;
+        customDataDictionaryColumn.classList.toggle('fade', value !== 'custom');
+        customDataDictionaryFile.disabled = value !== 'custom';
+        switch (value) {
+            case 'custom':
+                customDataDictionaryFile.dispatchEvent(new Event('change'));
+                break;
+            case 'auto':
+                fixMessage.dataDictionary = '';
+                break;
+            default:
+                fixMessage.dataDictionary = value;
+                break;
+        }
+    });
+
+    customDataDictionaryFile.addEventListener('change', () => {
+        const file = customDataDictionaryFile.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                fixMessage.dataDictionary = e.target.result;
+            };
+            reader.readAsText(file);
+        } else {
+            fixMessage.dataDictionary = '';
+        }
+
     });
 </script>
 </body>

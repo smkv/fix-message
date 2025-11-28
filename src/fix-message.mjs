@@ -640,6 +640,12 @@ tr.level-3 td.name {
     }
 
     async loadDictionary(file) {
+        if (file && file.startsWith('<')) {
+            const data = new Dictionary(file, 'application/xml');
+            console.log('loaded dictionary', data);
+            return data;
+        }
+
         if (FixMessageHTMLElement.DictionaryCache.hasOwnProperty(file)) {
             return FixMessageHTMLElement.DictionaryCache[file];
         }
