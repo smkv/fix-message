@@ -9,6 +9,10 @@ The component parses FIX messages and enriches them with data from a FIX diction
 *   **Two Display Modes**: View FIX messages as a raw string with custom delimiters or as a comprehensive HTML table.
 *   **Hierarchical Group Display**: Repeating groups are displayed in an indented, tree-like structure, making complex messages with nested components much easier to read.
 *   **FIX Dictionary Support**: Automatically uses the appropriate FIX dictionary based on the message version. It supports FIX versions 4.0 through 5.0 SP2.
+*   **Checksum Validation**: Automatically validates the message checksum and displays the result.
+*   **Data Enrichment**: Automatically describes values for common data types, including:
+    *   Converting UTC and zoned timestamps to the user's local time.
+    *   Displaying full names for currencies, countries, languages, and exchanges based on ISO standards.
 *   **Customizable**: Control the appearance and parsing with attributes like `message`, `delimiter`, and `mode`.
 *   **Intelligent Version Detection**: Automatically detects the data dictionary version from the message content when using FIXT 1.1.
 *   **Color-Coded Data Types**: The table view uses different colors for various data types (string, integer, float, etc.) to improve readability.
@@ -153,6 +157,17 @@ Here is a list of the available CSS variables:
 | `--tag-color`           | The color for the tag number column.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
 | `--border-color`        | The color for table borders.                         | `#e1e4e8`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/e1e4e8/e1e4e8.png">                   |
 | `--background-color`    | The background color for alternating rows.           | `#f6f8fa`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/f6f8fa/f6f8fa.png">                   |
+| `--tree-color`          | The color of the tree-like decorations for nested groups. | `#cccccc`                                             | <img width="40" height="20" src="https://dummyimage.com/40x20/cccccc/cccccc.png">                   |
+| `--even-backgroud-color`| The background color for even-numbered rows.         | `color-mix(in srgb, var(--background-color), white 10%)` | <img width="40" height="20" src="https://dummyimage.com/40x20/f9fafa/f9fafa.png">                   |
+
+## Data Modules
+
+The component uses several data modules to enrich the displayed FIX message. These modules are located in the `src` directory and can be customized if needed.
+
+*   `src/currencies.mjs`: A list of currencies based on the ISO 4217 standard.
+*   `src/countries.mjs`: A list of countries based on the ISO 3166-1 standard.
+*   `src/exchanges.mjs`: A list of exchanges based on the ISO 10383 Market Identifier Code (MIC) standard.
+*   `src/languages.mjs`: A list of languages based on the ISO 639-1 standard.
 
 ## License
 
