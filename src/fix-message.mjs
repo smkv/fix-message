@@ -406,9 +406,9 @@ tr.level-3 td.name {
             case 'MONTHYEAR':
                 return this.monthYearToLocal(value);
             case 'TZTIMEONLY':
-                return value; // todo
+                return this.zonedTimeToLocalTime(value);
             case 'TZTIMESTAMP':
-                return value; // todo
+                return this.zonedTimestampToLocalDateTime(value);
             case 'TENOR':
                 return this.tenorDescription(value);
             case 'CURRENCY':
@@ -678,6 +678,51 @@ tr.level-3 td.name {
         return new Date(year, month, day).toLocaleDateString();
     }
 
+    zonedTimestampToLocalDateTime(value) {
+        if (!value) {
+            return null;
+        }
+        // Regex handles YYYYMMDD-HH:MM:SS, variable fractional seconds, and optional TZ
+        const regex = /^(\d{4})(\d{2})(\d{2})-(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(?:(Z)|([+-]\d{2})(?::?(\d{2}))?)?$/;
+        const match = dateString.match(regex);
+
+        if (!match) return "Invalid Format";
+
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1; // Month is 0-indexed
+        const day = parseInt(match[3], 10);
+        const hour = parseInt(match[4], 10);
+        const minute = parseInt(match[5], 10);
+        const second = parseInt(match[6], 10);
+
+        // Take first 3 digits for MS, ignoring extra nano/pico precision for the Date object
+        const fracStr = match[7] || "0";
+        const milliseconds = parseInt(fracStr.padEnd(3, '0').substring(0, 3), 10);
+
+        const isUTC = match[8] === 'Z';
+        const offsetHourStr = match[9];
+        const offsetMinStr = match[10];
+
+        let date;
+
+        if (isUTC || offsetHourStr) {
+            let utcMs = Date.UTC(year, month, day, hour, minute, second, milliseconds);
+
+            if (offsetHourStr) {
+                const offsetHrs = parseInt(offsetHourStr, 10);
+                const offsetMins = offsetMinStr ? parseInt(offsetMinStr, 10) : 0;
+                // Invert offset to normalize to UTC
+                const totalOffsetMs = (offsetHrs * 60 + (offsetHrs < 0 ? -offsetMins : offsetMins)) * 60 * 1000;
+                utcMs -= totalOffsetMs;
+            }
+            date = new Date(utcMs);
+        } else {
+            date = new Date(year, month, day, hour, minute, second, milliseconds);
+        }
+
+        return `${date.toLocaleString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+    }
+
     monthYearToLocal(value) {
         // value in format 	202311
         if (!value) {
@@ -714,6 +759,59 @@ tr.level-3 td.name {
             return `${count} ${unit}${count > 1 ? 's' : ''}`;
         }
         return '';
+    }
+
+    zonedTimeToLocalTime(value) {
+        if (!value) {
+            return null;
+        }
+        // Regex: HH:MM, optional :SS, optional whitespace, optional Timezone (Z or offset)
+        const regex = /^(\d{2}):(\d{2})(?::(\d{2}))?\s*(?:(Z)|([+-]\d{2})(?::?(\d{2}))?)?$/;
+        const match = timeString.match(regex);
+
+        if (!match) return "Invalid Format";
+
+        const hour = parseInt(match[1], 10);
+        const minute = parseInt(match[2], 10);
+        const second = match[3] ? parseInt(match[3], 10) : 0;
+
+        const isUTC = match[4] === 'Z';
+        const offsetHourStr = match[5];
+        const offsetMinStr = match[6];
+
+        // Anchor to current date to handle DST correctly
+        const now = new Date();
+        let date;
+
+        if (isUTC || offsetHourStr) {
+            // 1. Construct base UTC time for today
+            let utcMs = Date.UTC(
+                now.getUTCFullYear(),
+                now.getUTCMonth(),
+                now.getUTCDate(),
+                hour, minute, second
+            );
+
+            // 2. Adjust if there is a numeric offset
+            if (offsetHourStr) {
+                const offsetHrs = parseInt(offsetHourStr, 10);
+                const offsetMins = offsetMinStr ? parseInt(offsetMinStr, 10) : 0;
+                // Subtract offset to normalize to UTC
+                // (e.g. Input +02:00 means we must subtract 2h to get UTC)
+                const totalOffsetMs = (offsetHrs * 60 + (offsetHrs < 0 ? -offsetMins : offsetMins)) * 60 * 1000;
+                utcMs -= totalOffsetMs;
+            }
+            date = new Date(utcMs);
+        } else {
+            // 3. No timezone? Assume local time for today
+            date = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                hour, minute, second
+            );
+        }
+        return `${date.toLocaleTimeString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
     }
 }
 
