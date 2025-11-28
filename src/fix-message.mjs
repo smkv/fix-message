@@ -398,7 +398,7 @@ tr.level-3 td.name {
     valueDescription(value, type, values) {
         switch (type) {
             case 'BOOLEAN':
-                return value === 'Y' ? 'Yes' : 'No';
+                return value === 'Y' ? 'True/Yes' : 'False/No';
             case 'UTCTIMESTAMP':
                 return this.utcTimestampToLocalDateTime(value);
             case 'LOCALMKTDATE':
