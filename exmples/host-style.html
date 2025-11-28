@@ -166,6 +166,8 @@
             word-break: break-all;
             background: #fff;
             color: #512b2b;
+            position: sticky;
+            top: 0;
         }
 
         div.message span.pair {
@@ -178,7 +180,11 @@
         }
 
         table tr.highlight {
-            background-color: #f2edeb;
+            background-color: rgba(251, 243, 247, 0.50);
+        }
+
+        table tr:has(:not(td.section)):hover {
+            background-color: rgba(251, 243, 247, 0.50);
         }
     </style>
 </head>
@@ -190,6 +196,7 @@
 <main>
     <section>
         <fix-message
+                id="fixMessage"
                 delimiter="|"
                 mode="table"
                 use-host-dom
@@ -197,7 +204,16 @@
         </fix-message>
     </section>
 </main>
-
 <script src="../src/fix-message.mjs" type="module"></script>
+<script>
+    const fixMessageElement = document.getElementById('fixMessage');
+    fixMessageElement.addEventListener('rendered', e => {
+        const messageDiv = fixMessageElement.querySelector('div.message');
+        const height = messageDiv.getBoundingClientRect().height;
+        fixMessageElement.querySelectorAll('table tr th').forEach(th => {
+            th.style.top = height + 'px';
+        });
+    });
+</script>
 </body>
 </html>

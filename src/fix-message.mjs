@@ -69,17 +69,18 @@ class FixMessageHTMLElement extends HTMLElement {
         }
     }
 
-    render() {
+    async render() {
         this.dom.textContent = 'Loading...';
         if (this.message) {
             if (this.mode === 'table') {
-                this.renderTable();
+                await this.renderTable();
             } else {
                 this.renderString();
             }
         } else {
             this.dom.textContent = 'No fix message to display';
         }
+        this.dispatchEvent(new CustomEvent('rendered'));
     }
 
     renderString() {
@@ -179,6 +180,22 @@ tr {
     background-color: var(--background-color);
 }
 
+tr:nth-child(even) {
+    background-color: var(--even-backgroud-color);
+}
+
+tr:nth-child(even):has(:not(td.section)):hover {
+    background-color: color-mix(in srgb, var(--even-backgroud-color), black 5%);
+}
+
+tr:has(:not(td.section)):hover {
+    background-color: color-mix(in srgb, var(--background-color), black 5%);
+}
+
+table tr.highlight {
+    background-color: color-mix(in srgb, var(--background-color), black 5%);
+}
+
 th {
     background-color: color-mix(in srgb, var(--background-color), black 10%);
     text-align: left;
@@ -270,24 +287,19 @@ td.type {
     width: 1%;
 }
 
-tr:nth-child(even) {
-    background-color: var(--even-backgroud-color);
-}
-
 tr[class^="level-"] td.tag {
     position: relative;
 }
 
-
 tr[class^="level-"] td.tag::before {
-    content: '├──'; 
+    content: '├──';
     color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
 }
 
 tr[class^="level-"].group-end td.tag::before {
-    content: '└──'; 
+    content: '└──';
     color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
@@ -317,7 +329,7 @@ tr.level-3 td.tag {
 }
 
 tr.level-1 td.name::before, tr.level-2 td.name::before {
-    content: '│ '; 
+    content: '│ ';
     color: var(--tree-color);
     margin-right: 8px;
     font-family: monospace;
@@ -328,11 +340,11 @@ tr[class="level-0"] td.name::before {
 }
 
 tr[class^="level-"].group-start td.name::before {
-    content: '┌─'; 
+    content: '┌─';
 }
 
 tr[class^="level-"].group-end td.name::before {
-    content: '└─'; 
+    content: '└─';
 }
 
 tr.level-1 td.name {
