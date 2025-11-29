@@ -14,24 +14,31 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
+<div class="pb-3 mb-4 border-bottom">
+    <header class="container py-3">
+        <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+            <img src="fix-decoder.svg" alt="Logo" height="50" class="me-4">
+            <span class="fs-4">FIX message decoder</span>
+        </a>
+    </header>
+</div>
 <div class="container">
-    <h1>FIX message decoder</h1>
     <form>
         <div class="mb-3">
             <label for="fixMessageTextarea" class="form-label">FIX message</label>
-            <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp"></textarea>
+            <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp" placeholder="E.g. 8=FIX.4.4|9=65|35=A|...|10=059|"></textarea>
             <div id="fixMessageHelp" class="form-text">Enter a FIX message to decode. All processing is done locally in
                 your browser, so your data remains secure and is never sent to a server. The standard SOH delimiter is
                 always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|
             </div>
         </div>
         <div class="mb-3 row">
-            <div class="col">
+            <div class="col-md-4 col-sm-12">
                 <label for="delimiterInput" class="form-label">Delimiter</label>
                 <input type="text" class="form-control" id="delimiterInput" value="|" size="1" maxlength="1"
                        style="width: 40px;">
             </div>
-            <div class="col">
+            <div class="col-md-4 col-sm-12">
                 <label for="dataDictionarySelect" class="form-label">Data Dictionary</label>
                 <select class="form-select" id="dataDictionarySelect">
                     <option value="auto">Auto</option>
@@ -46,7 +53,7 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
                     <option value="custom">Custom...</option>
                 </select>
             </div>
-            <div class="col fade">
+            <div class="col-md-4 col-sm-12 fade">
                 <label for="customDataDictionaryFile" class="form-label">Custom Data Dictionary</label>
                 <input type="file" class="form-control" id="customDataDictionaryFile" accept=".xml" disabled>
             </div>
@@ -127,9 +134,11 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFXQR34XHM"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
+
     function gtag() {
         dataLayer.push(arguments);
     }
+
     gtag('js', new Date());
     gtag('config', 'G-NFXQR34XHM');
 </script>

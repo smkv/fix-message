@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="src/fix-decoder.svg" alt="FIX Decoder" width="200"/>
+</div>
+
 # FIX Message Web Component
 
 This is a web component for displaying FIX (Financial Information eXchange) messages. It can render a FIX message as either a simple delimited string or a detailed, human-readable table.
