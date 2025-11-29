@@ -82,7 +82,7 @@ class FixMessageHTMLElement extends HTMLElement {
                 this.renderString();
             }
         } else {
-            this.dom.textContent = 'No fix message to display';
+            this.dom.textContent = 'No FIX message to display';
         }
         this.dispatchEvent(new CustomEvent('rendered'));
     }
