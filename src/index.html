@@ -16,31 +16,38 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
             crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="pb-3 mb-4 border-bottom">
+<div class="pb-3 mb-4 border-bottom text-bg-dark">
     <header class="container py-3">
-        <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
-            <img src="fix-decoder.svg" alt="Logo" height="50" class="me-4">
+        <a href="/" class="d-flex align-items-center text-decoration-none text-white">
+            <img src="fix-decoder.svg" alt="Logo" height="50" class="me-4" style="filter: invert()">
             <span class="fs-4">FIX message decoder</span>
         </a>
     </header>
 </div>
 <div class="container">
-    <form>
+    <form class="p-3 bg-body-tertiary border rounded-3">
         <div class="mb-3">
             <label for="fixMessageTextarea" class="form-label">FIX message</label>
-            <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp" placeholder="E.g. 8=FIX.4.4|9=65|35=A|...|10=059|"></textarea>
+            <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp"
+                      placeholder="E.g. 8=FIX.4.4|9=65|35=A|...|10=059|"></textarea>
             <div id="fixMessageHelp" class="form-text">Enter a FIX message to decode. All processing is done locally in
                 your browser, so your data remains secure and is never sent to a server. The standard SOH delimiter is
-                always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|. See more in <a href="https://en.wikipedia.org/wiki/Financial_Information_eXchange" target="_blank">Wikipedia</a>.
+                always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|. See more in <a
+                        href="https://en.wikipedia.org/wiki/Financial_Information_eXchange"
+                        target="_blank">Wikipedia</a>.
             </div>
         </div>
-        <div class="mb-3 row">
-            <div class="col-md-4 col-sm-12">
+        <div class="row">
+            <div class="mb-3 col-md-4 col-sm-12">
                 <label for="delimiterInput" class="form-label">Delimiter</label>
                 <input type="text" class="form-control" id="delimiterInput" value="|" size="1" maxlength="1"
                        style="width: 40px;">
+                <div id="delimiterHelp" class="form-text">
+                    A system can automatically recognize the FIX message delimiter, but in case of a mistake or a custom
+                    requirement, you can define your own.
+                </div>
             </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="mb-3 col-md-4 col-sm-12">
                 <label for="dataDictionarySelect" class="form-label">Data Dictionary</label>
                 <select class="form-select" id="dataDictionarySelect">
                     <option value="auto">Auto</option>
@@ -54,8 +61,20 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
                     <option value="FIX40.xml">FIX.4.0</option>
                     <option value="custom">Custom...</option>
                 </select>
+                <div id="dataDictionaryHelp" class="form-text">
+                    The appropriate data dictionary can be recognized automatically.
+                    <span class="collapse" id="dataDictionaryCollapsedHelp">This recognition is based on the BeginString (Tag 8) field in your message, or for the FIXT.1.1 transport protocol, it uses a higher-level session management algorithm (often checking the ApplVerID and DefaultApplVerID fields). If required, you can define your own custom dictionary by selecting the Custom option.
+                    <p>If your messages use the FIXT.1.1 transport protocol, the dictionary for the transport layer (session header/trailer) will automatically default to the FIXT.1.1 dictionary. You must then separately define the specific Application/Message Body Dictionary (e.g., FIX.5.0 SP2) that applies to the messages within that session.</p>
+                    </span>
+                    <a href="#dataDictionaryCollapsedHelp"
+                       id="dataDictionaryExpandHelp"
+                       data-bs-toggle="collapse"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="dataDictionaryCollapsedHelp">Read more...</a>
+                </div>
             </div>
-            <div class="col-md-4 col-sm-12 fade">
+            <div class="mb-3 col-md-4 col-sm-12 fade">
                 <label for="customDataDictionaryFile" class="form-label">Custom Data Dictionary</label>
                 <input type="file" class="form-control" id="customDataDictionaryFile" accept=".xml" disabled>
             </div>
@@ -76,13 +95,18 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
     </div>
 </div>
 <script src="fix-message.mjs" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 <script>
     const fixMessageTextarea = document.getElementById('fixMessageTextarea');
     const delimiterInput = document.getElementById('delimiterInput');
     const dataDictionarySelect = document.getElementById('dataDictionarySelect');
     const customDataDictionaryFile = document.getElementById('customDataDictionaryFile');
-    const customDataDictionaryColumn = customDataDictionaryFile.closest('div.col');
+    const customDataDictionaryColumn = customDataDictionaryFile.closest('div');
     const fixMessage = document.getElementById('fixMessage');
+    const dataDictionaryCollapsedHelp = document.getElementById('dataDictionaryCollapsedHelp');
+    const dataDictionaryExpandHelp = document.getElementById('dataDictionaryExpandHelp');
 
     fixMessageTextarea.addEventListener('input', () => {
         const message = fixMessageTextarea.value;
@@ -130,6 +154,13 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
             fixMessage.dataDictionary = '';
         }
 
+    });
+
+    dataDictionaryCollapsedHelp.addEventListener('show.bs.collapse', () => {
+        dataDictionaryExpandHelp.textContent = 'Hide more';
+    });
+    dataDictionaryCollapsedHelp.addEventListener('hidden.bs.collapse', () => {
+        dataDictionaryExpandHelp.textContent = 'Read more...';
     });
 </script>
 <!-- Google tag (gtag.js) -->
