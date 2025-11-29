@@ -4,7 +4,7 @@
 
 # FIX Message Web Component
 
-This is a web component for displaying FIX (Financial Information eXchange) messages. It can render a FIX message as either a simple delimited string or a detailed, human-readable table.
+This is a web component for displaying FIX ([Financial Information eXchange](https://en.wikipedia.org/wiki/Financial_Information_eXchange)) messages. It can render a FIX message as either a simple delimited string or a detailed, human-readable table.
 
 The component parses FIX messages and enriches them with data from a FIX dictionary, providing tag names, value descriptions, and other useful information.
 
