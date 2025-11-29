@@ -16,7 +16,7 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
             crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="pb-3 mb-4 border-bottom text-bg-dark">
+<div class="pb-3 mb-4 border-bottom text-bg-dark shadow">
     <header class="container py-3">
         <a href="/" class="d-flex align-items-center text-decoration-none text-white">
             <img src="fix-decoder.svg" alt="Logo" height="50" class="me-4" style="filter: invert()">
@@ -77,22 +77,26 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
             <div class="mb-3 col-md-4 col-sm-12 fade">
                 <label for="customDataDictionaryFile" class="form-label">Custom Data Dictionary</label>
                 <input type="file" class="form-control" id="customDataDictionaryFile" accept=".xml" disabled>
+                <div id="customDataDictionaryHelp" class="form-text">
+                    The file should be compatible with the QuickFixJ XML dictionary format.
+                </div>
             </div>
         </div>
     </form>
     <hr/>
     <fix-message id="fixMessage" message="" mode="table"></fix-message>
-    <hr/>
-    <div class="text-muted">
-        Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a>, an open-source Web
-        Component for decoding FIX messages.
-    </div>
-    <div class="text-muted">
-        This project is licensed under the MIT License. See the <a href="LICENSE.txt">LICENSE</a> file for details.
-    </div>
-    <div class="text-muted">
-        Copyright &copy; 2025 Andrei Samkov
-    </div>
+    <footer class="bg-light p-3 border-top mt-3 small">
+        <p class="text-muted">
+            Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a>, an open-source Web
+            Component for decoding FIX messages.
+        </p>
+        <p class="text-muted">
+            This project is licensed under the MIT License. See the <a href="LICENSE.txt">LICENSE</a> file for details.
+        </p>
+        <p class="text-muted">
+            Copyright &copy; 2025 Andrei Samkov
+        </p>
+    </footer>
 </div>
 <script src="fix-message.mjs" type="module"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
