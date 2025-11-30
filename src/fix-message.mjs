@@ -379,18 +379,27 @@ tr.level-3 td.name {
     }
     
     td {
-        flex-basis: 50%;
+        flex: 1 1 150px;
         box-sizing: border-box;
         padding-left: 5px !important;
+        padding-right: 5px !important;
+        word-break: auto-phrase !important;
     }
 
+    td:nth-child(odd) {
+        justify-content: flex-start;
+        text-align: start !important;
+    }
+    
     td:nth-child(even) {
+        justify-content: flex-end;
         text-align: end !important;
     }
     
     td:before {
         content: '' !important;
-        padding: 0;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 }`;
         this.dom.append(style);
