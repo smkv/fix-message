@@ -364,34 +364,33 @@ tr.level-3 td.name {
 }
 
 @media screen and (max-width: 600px) {
-    tr th {
+    th {
         display: none;
     }
 
-    table tr {
-        display: block !important;
+    tr {
+        display: flex !important;
         border-bottom: 2px solid var(--border-color);
+        flex-flow: wrap;
     }
 
-    td {
-        display: block;
-        text-align: right !important;
-        padding-left: 50%;
-        position: relative;
-        width: auto !important;
-    }
-
-    td:empty {
+    td:empty, td.type {
         display: none;
     }
+    
+    td {
+        flex-basis: 50%;
+        box-sizing: border-box;
+        padding-left: 5px !important;
+    }
 
-    td::before {
-        content: attr(data-label) !important;
-        position: absolute;
-        left: 6px;
-        font-weight: bold;
-        text-align: left !important;
-        color: var(--font-color) !important;
+    td:nth-child(even) {
+        text-align: end !important;
+    }
+    
+    td:before {
+        content: '' !important;
+        padding: 0;
     }
 }`;
         this.dom.append(style);
