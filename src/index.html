@@ -10,11 +10,13 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FIX message decoder</title>
-    <meta name="description" content="A free online tool to decode and analyze FIX (Financial Information eXchange) messages.">
-    <meta name="keywords" content="FIX decoder, FIX message, FIX protocol, FIX parser, FIX analyzer, financial information exchange">
+    <meta name="description"
+          content="A free online tool to decode and analyze FIX (Financial Information eXchange) messages.">
+    <meta name="keywords"
+          content="FIX decoder, FIX message, FIX protocol, FIX parser, FIX analyzer, financial information exchange">
     <meta name="author" content="Andrei Samkov">
-    <meta name="google-site-verification" content="jfYTsThEwU765A9k8TP_K--aGrAfO1D4b_8_vXZQjbM" />
-    <meta name="msvalidate.01" content="E0A30ACD4AB90EE347ED4C70C13823B1" />
+    <meta name="google-site-verification" content="jfYTsThEwU765A9k8TP_K--aGrAfO1D4b_8_vXZQjbM"/>
+    <meta name="msvalidate.01" content="E0A30ACD4AB90EE347ED4C70C13823B1"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0735694594870722"
@@ -30,16 +32,20 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
     </header>
 </div>
 <div class="container">
-    <form class="p-3 bg-body-tertiary border rounded-3">
+    <div class="p-3 bg-body-tertiary border rounded-3">
         <div class="mb-3">
             <label for="fixMessageTextarea" class="form-label">FIX message</label>
             <textarea class="form-control" id="fixMessageTextarea" aria-describedby="fixMessageHelp"
                       placeholder="E.g. 8=FIX.4.4|9=65|35=A|...|10=059|"></textarea>
+            <div class="float-end p-2">
+                <button id="sampleDataButton" type="button" class="btn btn-sm btn-secondary">Sample data</button>
+                <button id="cleanButton" type="button" class="btn btn-sm btn-danger">Clean</button>
+            </div>
             <div id="fixMessageHelp" class="form-text">Enter a FIX message to decode. All processing is done locally in
                 your browser, so your data remains secure and is never sent to a server. The standard SOH delimiter is
                 always supported. E.g. 8=FIX.4.2|9=65|35=A|...|10=059|. See more in <a
                         href="https://en.wikipedia.org/wiki/Financial_Information_eXchange"
-                        target="_blank">Wikipedia</a>.
+                        target="_blank">Wikipedia</a> about FIX.
             </div>
         </div>
         <div class="row">
@@ -87,7 +93,7 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
                 </div>
             </div>
         </div>
-    </form>
+    </div>
     <hr/>
     <fix-message id="fixMessage" message="" mode="table"></fix-message>
     <footer class="bg-light p-3 border-top mt-3 small">
@@ -116,6 +122,8 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
     const fixMessage = document.getElementById('fixMessage');
     const dataDictionaryCollapsedHelp = document.getElementById('dataDictionaryCollapsedHelp');
     const dataDictionaryExpandHelp = document.getElementById('dataDictionaryExpandHelp');
+    const sampleDataButton = document.getElementById('sampleDataButton');
+    const cleanButton = document.getElementById('cleanButton');
 
     fixMessageTextarea.addEventListener('input', () => {
         const message = fixMessageTextarea.value;
@@ -170,6 +178,16 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
     });
     dataDictionaryCollapsedHelp.addEventListener('hidden.bs.collapse', () => {
         dataDictionaryExpandHelp.textContent = 'Read more...';
+    });
+
+    sampleDataButton.addEventListener('click', () => {
+        fixMessageTextarea.value = '8=FIX.4.4|9=413|35=AE|34=2|52=20051121-08:39:50|49=MEFF|50=C2|56=A899|57=351|571=003C4E2B0000|150=F|818=101|527=FI0000000001|5681=M|570=Y|55=MNZ05|32=10|31=9365|75=20050330|60=20050330-07:39:21|768=1|769=20050330-07:39:21|770=3|63=0|881=101|880=101|552=1|54=2|37=050330OA89935100002|198=FI2|453=1|448=A899|447=D|452=13|1=00101|381=93650|77=O|136=2|137=0.00|138=EUR|139=4|891=0|137=1.50|138=EUR|139=7|891=0|568=TCRYY1|325=N|912=N|10=048|';
+        fixMessageTextarea.dispatchEvent(new Event('input'));
+    });
+
+    cleanButton.addEventListener('click', () => {
+        fixMessageTextarea.value = '';
+        fixMessageTextarea.dispatchEvent(new Event('input'));
     });
 </script>
 <!-- Google tag (gtag.js) -->
