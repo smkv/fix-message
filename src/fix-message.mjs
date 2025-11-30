@@ -56,6 +56,11 @@ class FixMessageHTMLElement extends HTMLElement {
     }
     dom;
     useHostDom;
+    labelTag = 'Tag';
+    labelTagName = 'Tag Name';
+    labelValue = 'Value';
+    labelValueDescription = 'Value Description';
+    labelValueType = 'Value Type';
 
     constructor() {
         super();
@@ -94,7 +99,7 @@ class FixMessageHTMLElement extends HTMLElement {
     async renderTable() {
         const model = await this.loadModel();
         const table = document.createElement('table');
-        table.append(this.createTableRow('Tag', 'Tag Name', 'Value', 'Value Description', 'Value Type', 'th'));
+        table.append(this.createTableRow(this.labelTag, this.labelTagName, this.labelValue, this.labelValueDescription, this.labelValueType, 'th'));
         table.append(this.createSectionRow('Header'));
         this.buildTableBody(table, model.header);
         table.append(this.createSectionRow('Message'));
@@ -357,7 +362,38 @@ tr.level-2 td.name {
 tr.level-3 td.name {
     padding-left: calc(var(--indent-step) * 3);
 }
-`;
+
+@media screen and (max-width: 600px) {
+    tr th {
+        display: none;
+    }
+
+    table tr {
+        display: block !important;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+        display: block;
+        text-align: right !important;
+        padding-left: 50%;
+        position: relative;
+        width: auto !important;
+    }
+
+    td:empty {
+        display: none;
+    }
+
+    td::before {
+        content: attr(data-label) !important;
+        position: absolute;
+        left: 6px;
+        font-weight: bold;
+        text-align: left !important;
+        color: var(--font-color) !important;
+    }
+}`;
         this.dom.append(style);
     }
 
@@ -448,15 +484,20 @@ tr.level-3 td.name {
         const cellDescription = document.createElement(htmlTag);
         cellTag.classList.add('tag');
         cellTag.textContent = tag;
+        cellTag.dataset.label = this.labelTag;
         cellName.classList.add('name');
         cellName.textContent = name;
+        cellName.dataset.label = this.labelTagName;
         cellValue.classList.add('value');
         cellValue.textContent = value;
+        cellValue.dataset.label = this.labelValue;
         cellValue.dataset.type = type;
         cellType.classList.add('type');
         cellType.textContent = type;
+        cellType.dataset.label = this.labelValueType;
         cellDescription.classList.add('description');
         cellDescription.textContent = description;
+        cellDescription.dataset.label = this.labelValueDescription;
         row.append(cellTag, cellName, cellValue, cellDescription, cellType);
         return row;
     }
