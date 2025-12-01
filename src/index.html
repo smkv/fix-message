@@ -104,6 +104,23 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
         </svg>
         Export to CSV
     </button>
+    <!-- AddToAny BEGIN -->
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+        <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+        <a class="a2a_button_email"></a>
+        <a class="a2a_button_facebook"></a>
+        <a class="a2a_button_whatsapp"></a>
+        <a class="a2a_button_pinterest"></a>
+        <a class="a2a_button_telegram"></a>
+        <a class="a2a_button_reddit"></a>
+        <a class="a2a_button_linkedin"></a>
+        <a class="a2a_button_x"></a>
+        <a class="a2a_button_microsoft_teams"></a>
+        <a class="a2a_button_odnoklassniki"></a>
+        <a class="a2a_button_evernote"></a>
+    </div>
+    <script defer src="https://static.addtoany.com/menu/page.js"></script>
+    <!-- AddToAny END -->
     <footer class="bg-light p-3 border-top mt-3 small">
         <p class="text-muted">
             Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a>, an open-source Web
@@ -146,6 +163,7 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
             }
         }
         csvExportButton.classList.toggle('fade', !message);
+        window.location.hash = message;
     });
 
     delimiterInput.addEventListener('input', () => {
