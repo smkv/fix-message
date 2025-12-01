@@ -260,6 +260,12 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     });
+
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#8=')) {
+        fixMessageTextarea.value = decodeURIComponent(hash.substring(1));
+        fixMessageTextarea.dispatchEvent(new Event('input'));
+    }
 </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFXQR34XHM"></script>
