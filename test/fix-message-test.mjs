@@ -13,6 +13,7 @@ QUnit.test('loadModel', async (assert) => {
     assert.deepEqual(model, {
         "header": [
             {
+                "index": 0,
                 "name": "BeginString",
                 "number": "8",
                 "type": "STRING",
@@ -20,6 +21,7 @@ QUnit.test('loadModel', async (assert) => {
                 "values": {}
             },
             {
+                "index": 1,
                 "name": "BodyLength",
                 "number": "9",
                 "type": "LENGTH",
@@ -27,6 +29,7 @@ QUnit.test('loadModel', async (assert) => {
                 "values": {}
             },
             {
+                "index": 2,
                 "name": "MsgType",
                 "number": "35",
                 "type": "STRING",
@@ -128,6 +131,7 @@ QUnit.test('loadModel', async (assert) => {
                 }
             },
             {
+                "index": 3,
                 "name": "MsgSeqNum",
                 "number": "34",
                 "type": "SEQNUM",
@@ -135,6 +139,7 @@ QUnit.test('loadModel', async (assert) => {
                 "values": {}
             },
             {
+                "index": 4,
                 "name": "SenderCompID",
                 "number": "49",
                 "type": "STRING",
@@ -142,6 +147,7 @@ QUnit.test('loadModel', async (assert) => {
                 "values": {}
             },
             {
+                "index": 5,
                 "name": "SendingTime",
                 "number": "52",
                 "type": "UTCTIMESTAMP",
@@ -149,6 +155,7 @@ QUnit.test('loadModel', async (assert) => {
                 "values": {}
             },
             {
+                "index": 6,
                 "name": "TargetCompID",
                 "number": "56",
                 "type": "STRING",
@@ -158,6 +165,7 @@ QUnit.test('loadModel', async (assert) => {
         ],
         "message": [
             {
+                "index": 7,
                 "name": "EncryptMethod",
                 "number": "98",
                 "type": "INT",
@@ -173,6 +181,7 @@ QUnit.test('loadModel', async (assert) => {
                 }
             },
             {
+                "index": 8,
                 "name": "HeartBtInt",
                 "number": "108",
                 "type": "INT",
@@ -182,6 +191,7 @@ QUnit.test('loadModel', async (assert) => {
         ],
         "trailer": [
             {
+                "index": 9,
                 "name": "CheckSum",
                 "number": "10",
                 "type": "STRING",
@@ -201,6 +211,7 @@ QUnit.test('loadModelGroups', async (assert) => {
     assert.deepEqual(model.message,
         [
             {
+                "index": 7,
                 "name": "MDReqID",
                 "number": "262",
                 "type": "STRING",
@@ -208,6 +219,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                 "values": {}
             },
             {
+                "index": 8,
                 "name": "Symbol",
                 "number": "55",
                 "type": "STRING",
@@ -215,6 +227,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                 "values": {}
             },
             {
+                "index": 9,
                 "name": "NoMDEntries",
                 "number": "268",
                 "type": "NUMINGROUP",
@@ -222,6 +235,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                 "values": {},
                 "groups": [[
                     {
+                        "index": 10,
                         "name": "MDEntryType",
                         "number": "269",
                         "type": "CHAR",
@@ -243,6 +257,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         }
                     },
                     {
+                        "index": 11,
                         "name": "MDEntryPx",
                         "number": "270",
                         "type": "PRICE",
@@ -250,6 +265,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 12,
                         "name": "MDEntrySize",
                         "number": "271",
                         "type": "QTY",
@@ -257,6 +273,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 13,
                         "name": "QuoteEntryID",
                         "number": "299",
                         "type": "STRING",
@@ -264,6 +281,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 14,
                         "name": "QuoteID",
                         "number": "117",
                         "type": "STRING",
@@ -272,6 +290,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                     }
                 ], [
                     {
+                        "index": 15,
                         "name": "MDEntryType",
                         "number": "269",
                         "type": "CHAR",
@@ -293,6 +312,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         }
                     },
                     {
+                        "index": 16,
                         "name": "MDEntryPx",
                         "number": "270",
                         "type": "PRICE",
@@ -300,6 +320,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 17,
                         "name": "MDEntrySize",
                         "number": "271",
                         "type": "QTY",
@@ -307,6 +328,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 18,
                         "name": "QuoteEntryID",
                         "number": "299",
                         "type": "STRING",
@@ -314,6 +336,7 @@ QUnit.test('loadModelGroups', async (assert) => {
                         "values": {}
                     },
                     {
+                        "index": 19,
                         "name": "QuoteID",
                         "number": "117",
                         "type": "STRING",
@@ -325,3 +348,42 @@ QUnit.test('loadModelGroups', async (assert) => {
         ]);
     done();
 });
+
+QUnit.test('utcTimestampToLocalDateTime', assert => {
+    const element = document.createElement('fix-message');
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const date = new Date(Date.UTC(2023, 10, 20, 14, 30, 0, 0));
+    assert.strictEqual(element.utcTimestampToLocalDateTime('20231120-14:30:00.000'), `${date.toLocaleString()} (${timeZone})`);
+});
+
+QUnit.test('zonedTimestampToLocalDateTime', assert => {
+    const element = document.createElement('fix-message');
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const date = new Date(Date.UTC(2023, 10, 20, 12, 30, 0, 0));
+    assert.strictEqual(element.zonedTimestampToLocalDateTime('20231120-14:30:00.000+0200'), `${date.toLocaleString()} (${timeZone})`);
+});
+
+QUnit.test('localDate', assert => {
+    const element = document.createElement('fix-message');
+    const date = new Date(Date.UTC(2023, 10, 20));
+    assert.strictEqual(element.localDate('20231120'), date.toLocaleDateString());
+});
+
+QUnit.test('monthYearToLocalWithDay', assert => {
+    const element = document.createElement('fix-message');
+    const date = new Date(Date.UTC(2023, 10, 20));
+    assert.strictEqual(element.monthYearToLocal('20231120'), date.toLocaleDateString());
+});
+
+QUnit.test('monthYearToLocal', assert => {
+    const element = document.createElement('fix-message');
+    const date = new Date(Date.UTC(2023, 10));
+    assert.strictEqual(element.monthYearToLocal('20231100'), date.toLocaleString(undefined, {year: 'numeric', month: 'long'}));
+});
+
+QUnit.test('monthYearToLocalWeek', assert => {
+    const element = document.createElement('fix-message');
+    const date = new Date(Date.UTC(2023, 10));
+    assert.strictEqual(element.monthYearToLocal('202311W2'), `Week of ${date.toLocaleString(undefined, {year: 'numeric', month: 'long'})}, 2`);
+});
+

@@ -61,6 +61,10 @@ class FixMessageHTMLElement extends HTMLElement {
     labelValue = 'Value';
     labelValueDescription = 'Value Description';
     labelValueType = 'Value Type';
+    labelSection = 'Section';
+    labelSectionHeader = 'Header';
+    labelSectionMessage = 'Message';
+    labelSectionTrailer = 'Trailer';
 
     constructor() {
         super();
@@ -100,11 +104,11 @@ class FixMessageHTMLElement extends HTMLElement {
         const model = await this.loadModel();
         const table = document.createElement('table');
         table.append(this.createTableRow(this.labelTag, this.labelTagName, this.labelValue, this.labelValueDescription, this.labelValueType, 'th'));
-        table.append(this.createSectionRow('Header'));
+        table.append(this.createSectionRow(this.labelSectionHeader));
         this.buildTableBody(table, model.header);
-        table.append(this.createSectionRow('Message'));
+        table.append(this.createSectionRow(this.labelSectionMessage));
         this.buildTableBody(table, model.message);
-        table.append(this.createSectionRow('Trailer'));
+        table.append(this.createSectionRow(this.labelSectionTrailer));
         this.buildTableBody(table, model.trailer);
         this.dom.innerHTML = '';
         if (!this.useHostDom) {
@@ -157,7 +161,7 @@ class FixMessageHTMLElement extends HTMLElement {
 }
 
 div.message {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace), sans-serif;
     word-break: break-all;
     background: var(--background-color);
     color: var(--font-color);
@@ -175,7 +179,7 @@ div.message span.pair:hover, div.message span.pair.highlight {
 
 table {
     border-collapse: collapse;
-    font-family: var(--font-family);
+    font-family: var(--font-family), sans-serif;
     color: var(--font-color);
     border: 1px solid var(--border-color);
 }
@@ -214,7 +218,7 @@ td {
 }
 
 td.tag {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace), monospace;
     font-weight: bold;
     color: var(--tag-color);
 }
@@ -225,7 +229,7 @@ td.name {
 }
 
 td.value {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace), monospace;
     color: var(--value-color);
     word-break: break-all;
 }
@@ -278,13 +282,13 @@ td.value[data-type=TIME] {
 }
 
 td.description {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace), sans-serif;
     color: var(--value-color);
     word-break: break-all;
 }
 
 td.type {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace), sans-serif;
     color: var(--type-color);
     line-height: 1;
     white-space: pre;
@@ -458,8 +462,6 @@ tr.level-3 td.name {
                 return this.zonedTimeToLocalTime(value);
             case 'TZTIMESTAMP':
                 return this.zonedTimestampToLocalDateTime(value);
-            case 'TENOR':
-                return this.tenorDescription(value);
             case 'CURRENCY':
                 return value ? currencies[value.toUpperCase()] || '' : '';
             case 'COUNTRY':
@@ -479,7 +481,9 @@ tr.level-3 td.name {
         cell.colSpan = 5;
         cell.textContent = section;
         cell.classList.add('section');
+        cell.ariaLabel = section;
         row.append(cell);
+        row.ariaLabel = this.labelSection;
         return row;
     }
 
@@ -492,20 +496,20 @@ tr.level-3 td.name {
         const cellDescription = document.createElement(htmlTag);
         cellTag.classList.add('tag');
         cellTag.textContent = tag;
-        cellTag.dataset.label = this.labelTag;
+        cellTag.ariaLabel = this.labelTag;
         cellName.classList.add('name');
         cellName.textContent = name;
-        cellName.dataset.label = this.labelTagName;
+        cellName.ariaLabel = this.labelTagName;
         cellValue.classList.add('value');
         cellValue.textContent = value;
-        cellValue.dataset.label = this.labelValue;
+        cellValue.ariaLabel = this.labelValue;
         cellValue.dataset.type = type;
         cellType.classList.add('type');
         cellType.textContent = type;
-        cellType.dataset.label = this.labelValueType;
+        cellType.ariaLabel = this.labelValueType;
         cellDescription.classList.add('description');
         cellDescription.textContent = description;
-        cellDescription.dataset.label = this.labelValueDescription;
+        cellDescription.ariaLabel = this.labelValueDescription;
         row.append(cellTag, cellName, cellValue, cellDescription, cellType);
         return row;
     }
@@ -546,10 +550,7 @@ tr.level-3 td.name {
         const header = this.loadModelSection(headerFields, headerSchema);
         const message = this.loadModelSection(messageFields, messageSchema);
         const trailer = this.loadModelSection(trailerFields, trailerSchema);
-
-        const model = {header, message, trailer};
-        console.log('model', model);
-        return model;
+        return {header, message, trailer};
     }
 
     loadModelSection(fields, schema) {
@@ -690,9 +691,7 @@ tr.level-3 td.name {
 
     async loadDictionary(file) {
         if (file && file.startsWith('<')) {
-            const data = new Dictionary(file, 'application/xml');
-            console.log('loaded dictionary', data);
-            return data;
+            return new Dictionary(file, 'application/xml');
         }
 
         if (FixMessageHTMLElement.DictionaryCache.hasOwnProperty(file)) {
@@ -706,7 +705,6 @@ tr.level-3 td.name {
         if (response.ok) {
             const data = new Dictionary(await response.text(), response.headers.get('Content-Type') || 'application/xml');
             FixMessageHTMLElement.DictionaryCache[file] = data;
-            console.log('loaded dictionary', file, data);
             return data;
         } else {
             console.error('Error loading data dictionary:', response.statusText);
@@ -746,7 +744,7 @@ tr.level-3 td.name {
         }
         // Regex handles YYYYMMDD-HH:MM:SS, variable fractional seconds, and optional TZ
         const regex = /^(\d{4})(\d{2})(\d{2})-(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(?:(Z)|([+-]\d{2})(?::?(\d{2}))?)?$/;
-        const match = dateString.match(regex);
+        const match = value.match(regex);
 
         if (!match) return "Invalid Format";
 
@@ -806,30 +804,13 @@ tr.level-3 td.name {
         return localDate;
     }
 
-    tenorDescription(value) {
-        const units = {
-            D: 'Day',
-            W: 'Week',
-            M: 'Month',
-            Y: 'Year'
-        };
-        const regex = /([DWMY])(\\d+)/gi
-        if (regex.test(value)) {
-            const exec = regex.exec(value);
-            const unit = units[exec[1]];
-            const count = exec[2];
-            return `${count} ${unit}${count > 1 ? 's' : ''}`;
-        }
-        return '';
-    }
-
     zonedTimeToLocalTime(value) {
         if (!value) {
             return null;
         }
         // Regex: HH:MM, optional :SS, optional whitespace, optional Timezone (Z or offset)
         const regex = /^(\d{2}):(\d{2})(?::(\d{2}))?\s*(?:(Z)|([+-]\d{2})(?::?(\d{2}))?)?$/;
-        const match = timeString.match(regex);
+        const match = value.match(regex);
 
         if (!match) return "Invalid Format";
 
