@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="src/fix-decoder.svg" alt="FIX Decoder" width="200"/>
+    <img src="src/fix-decoder.svg" alt="FIX Decoder" width="300"/>
 </div>
 
 # FIX Message Web Component
@@ -22,6 +22,7 @@ The component parses FIX messages and enriches them with data from a FIX diction
 *   **Color-Coded Data Types**: The table view uses different colors for various data types (string, integer, float, etc.) to improve readability.
 
 Demo FIX message decoder can be found here https://fix-decoder.samkov.ee
+
 [<img alt="Website Deployed for Free with FTP Deploy Action" src="https://img.shields.io/badge/Website deployed for free with-FTP DEPLOY ACTION-%3CCOLOR%3E?style=for-the-badge&color=297FA9">](https://github.com/SamKirkland/FTP-Deploy-Action)
 
 
@@ -149,20 +150,24 @@ Here is a list of the available CSS variables:
 | `--font-family`         | The primary font for text content.                   | `-apple-system, BlinkMacSystemFont, "Segoe UI", ...`     |                                                                                                         |
 | `--font-monospace`      | The font for monospace content like tags and values. | `'Consolas', 'Menlo', 'Courier New', monospace`         |                                                                                                         |
 | `--indent-step`         | The indentation width for each level in a nested group.| `25px`                                                  |                                                                                                         |
-| `--font-color`          | The main text color.                                 | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
-| `--value-color`         | The default color for values in the table.           | `#333`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/333333/333333.png">                   |
-| `--type-color`          | The color for the data type column.                  | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
+| `--font-color`          | The main text color.                                 | `#000E24`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/000E24/000E24.png">                   |
+| `--background-color`    | The default background color.                        | `#FFF`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/FFFFFF/FFFFFF.png">                   |
+| `--even-backgroud-color`| The background color for even-numbered rows.         | `#E5F0FF`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/E5F0FF/E5F0FF.png">                   |
+| `--header-font-color`   | The font color for table headers.                    | `#E5F0FF`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/E5F0FF/E5F0FF.png">                   |
+| `--header-background-color`| The background color for table headers.           | `#013A63`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/013A63/013A63.png">                   |
+| `--section-font-color`  | The font color for section headers.                  | `#E5F0FF`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/E5F0FF/E5F0FF.png">                   |
+| `--section-background-color`| The background color for section headers.         | `#66A3FF`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/66A3FF/66A3FF.png">                   |
+| `--border-color`        | The color for table borders.                         | `#CCE0FF`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/CCE0FF/CCE0FF.png">                   |
+| `--tree-color`          | The color of the tree-like decorations for nested groups. | `#cccccc`                                             | <img width="40" height="20" src="https://dummyimage.com/40x20/cccccc/cccccc.png">                   |
+| `--tag-color`           | The color for the tag number column.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
 | `--string-value-color`  | The color for string data types.                     | `#269141`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/269141/269141.png">                   |
-| `--char-value-color`    | The color for character data types.                  | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
 | `--integer-value-color` | The color for integer data types.                    | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
 | `--float-value-color`   | The color for float/decimal data types.              | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
+| `--char-value-color`    | The color for character data types.                  | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
 | `--boolean-value-color` | The color for boolean data types.                    | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
 | `--datetime-value-color`| The color for date and time data types.              | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
-| `--tag-color`           | The color for the tag number column.                 | `#0366d6`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/0366d6/0366d6.png">                   |
-| `--border-color`        | The color for table borders.                         | `#e1e4e8`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/e1e4e8/e1e4e8.png">                   |
-| `--background-color`    | The background color for alternating rows.           | `#f6f8fa`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/f6f8fa/f6f8fa.png">                   |
-| `--tree-color`          | The color of the tree-like decorations for nested groups. | `#cccccc`                                             | <img width="40" height="20" src="https://dummyimage.com/40x20/cccccc/cccccc.png">                   |
-| `--even-backgroud-color`| The background color for even-numbered rows.         | `color-mix(in srgb, var(--background-color), white 10%)` | <img width="40" height="20" src="https://dummyimage.com/40x20/f9fafa/f9fafa.png">                   |
+| `--type-color`          | The color for the data type column.                  | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
+| `--value-color`         | The default color for values in the table.           | `var(--font-color)`                                     | <img width="40" height="20" src="https://dummyimage.com/40x20/000E24/000E24.png">                   |
 
 ## Data Modules
 

@@ -139,24 +139,29 @@ class FixMessageHTMLElement extends HTMLElement {
     appendStyle() {
         const style = document.createElement('style')
         style.textContent = `
+
+
 :host {
     --font-size: 14px;
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     --font-monospace: 'Consolas', 'Menlo', 'Courier New', monospace;
-    --font-color: #333;
-    --value-color: #333;
-    --type-color: #999;
+    --font-color: #000E24;
+    --background-color: #FFF;
+    --even-backgroud-color: #E5F0FF;
+    --header-font-color: #E5F0FF;
+    --header-background-color: #013A63;
+    --section-font-color: #E5F0FF;
+    --section-background-color: #66A3FF;
+    --border-color: #CCE0FF;
+    --tree-color: #cccccc;
+    --tag-color: #0366d6;
     --string-value-color: #269141;
-    --char-value-color: #a61945;
     --integer-value-color: #0366d6;
     --float-value-color: #0366d6;
+    --char-value-color: #a61945;
     --boolean-value-color: #a61945;
     --datetime-value-color: #a61945;
-    --tag-color: #0366d6;
-    --border-color: #e1e4e8;
-    --background-color: #f6f8fa;
-    --tree-color: #cccccc;
-    --even-backgroud-color: color-mix(in srgb, var(--background-color), white 10%);
+    --type-color: #999;
     --indent-step: 25px;
 }
 
@@ -181,7 +186,6 @@ table {
     border-collapse: collapse;
     font-family: var(--font-family), sans-serif;
     color: var(--font-color);
-    border: 1px solid var(--border-color);
 }
 
 tr {
@@ -197,24 +201,39 @@ tr:nth-child(even):has(:not(td.section)):hover {
 }
 
 tr:has(:not(td.section)):hover {
-    background-color: color-mix(in srgb, var(--background-color), black 5%);
+    background-color: color-mix(in srgb, var(--even-backgroud-color), black 5%);
 }
 
 table tr.highlight {
-    background-color: color-mix(in srgb, var(--background-color), black 5%);
+    background-color: color-mix(in srgb, var(--even-backgroud-color), black 5%);
 }
 
 th {
-    background-color: color-mix(in srgb, var(--background-color), black 10%);
+    background-color: var(--header-background-color);
+    color: var(--header-font-color);
     text-align: left;
     font-weight: 600;
-    border-bottom: 2px solid var(--border-color);
-    color: var(--font-color);
+    padding: 15px 5px 5px 5px;
+}
+
+th:first-child {
+ border-top-left-radius: 7px;
+}
+
+th:last-child {
+ border-top-right-radius: 7px;
 }
 
 td {
     border-bottom: 1px solid var(--border-color);
     vertical-align: middle;
+    padding: 5px;
+}
+
+td.section {
+    background-color: var(--section-background-color);
+    color: var(--section-font-color);
+    padding: 5px;
 }
 
 td.tag {
@@ -230,7 +249,6 @@ td.name {
 
 td.value {
     font-family: var(--font-monospace), monospace;
-    color: var(--value-color);
     word-break: break-all;
 }
 
@@ -283,7 +301,6 @@ td.value[data-type=TIME] {
 
 td.description {
     font-family: var(--font-monospace), sans-serif;
-    color: var(--value-color);
     word-break: break-all;
 }
 
