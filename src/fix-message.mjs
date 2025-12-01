@@ -127,6 +127,9 @@ class FixMessageHTMLElement extends HTMLElement {
             pair.addEventListener('mouseout', e => {
                 this.table.querySelector(`tr[data-index="${index}"]`).classList.remove('highlight');
             });
+            pair.addEventListener('click', e => {
+                this.table.querySelector(`tr[data-index="${index}"]`).scrollIntoView();
+            });
             messageDiv.append(pair);
             messageDiv.append(this.delimiter);
         });
