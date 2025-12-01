@@ -21,11 +21,23 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0735694594870722"
             crossorigin="anonymous"></script>
+    <style>
+        .header-bar {
+            border-bottom: 5px solid #66A3FF;
+            background-color: #013A63;
+            color: #E5F0FF;
+        }
+
+        .header-bar a {
+            color: #E5F0FF;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-<div class="pb-3 mb-4 border-bottom shadow" style="background-color: #013A63;">
+<div class="pb-3 mb-4 shadow header-bar">
     <header class="container py-3">
-        <a href="/" class="d-flex align-items-center text-decoration-none text-white">
+        <a href="/" class="d-flex align-items-center text-decoration-none">
             <img src="fix-decoder.svg" alt="Logo" height="50" class="me-4" style="filter: invert()">
             <span class="fs-4">FIX message decoder</span>
         </a>
@@ -170,7 +182,7 @@ This source code is licensed under the MIT license found in the LICENSE.txt file
 
     fixMessageTextarea.addEventListener('input', () => {
         const message = fixMessageTextarea.value;
-        fixMessage.message = message;
+        fixMessage.setAttribute('message', message);
         const delimiters = [String.fromCharCode(1), '|', '^', '$', '·', '\t', '\n'];
 
         for (const delimiter of delimiters) {
