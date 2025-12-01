@@ -169,6 +169,26 @@ Here is a list of the available CSS variables:
 | `--type-color`          | The color for the data type column.                  | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
 | `--value-color`         | The default color for values in the table.           | `var(--font-color)`                                     | <img width="40" height="20" src="https://dummyimage.com/40x20/000E24/000E24.png">                   |
 
+## Custom Events
+
+The `fix-message` component emits a `rendered` event after it has finished rendering the FIX message. This can be useful for performing actions after the component has been updated.
+
+```javascript
+const fixMessageElement = document.querySelector('fix-message');
+fixMessageElement.addEventListener('rendered', () => {
+    console.log('FIX message has been rendered.');
+});
+```
+
+The `fix-message` component also emits a `copied` event when the FIX message has been copied to the clipboard. This can be useful for displaying information about the copy-to-clipboard action to the user in your framework’s style.
+
+```javascript
+const fixMessageElement = document.querySelector('fix-message');
+fixMessageElement.addEventListener('copied', () => {
+    alert('FIX message has been copied to the clipboard.');
+});
+```
+
 ## Data Modules
 
 The component uses several data modules to enrich the displayed FIX message. These modules are located in the `src` directory and can be customized if needed.
