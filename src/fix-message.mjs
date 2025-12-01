@@ -159,6 +159,11 @@ class FixMessageHTMLElement extends HTMLElement {
         this.dom.append(messageDiv, table);
         this.table = table;
         this.messageDiv = messageDiv;
+
+        const credits = document.createElement('div');
+        credits.innerHTML = `Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a> Web Component, Copyright © ${new Date().getFullYear()} Andrei Samkov`;
+        credits.classList.add('credits');
+        this.dom.append(credits);
     }
 
     appendStyle() {
@@ -187,7 +192,12 @@ class FixMessageHTMLElement extends HTMLElement {
     --boolean-value-color: #a61945;
     --datetime-value-color: #a61945;
     --type-color: #999;
+    --link-color: blue;
     --indent-step: 25px;
+}
+
+a {
+    color: var(--link-color);
 }
 
 div.message {
@@ -195,12 +205,16 @@ div.message {
     word-break: break-all;
     background: var(--background-color);
     color: var(--font-color);
+    padding: 5px;
+    border-radius: 5px;
 }
 
 div.message span.pair {
     background: var(--background-color);
     color: var(--font-color);
     display: inline-block;
+    padding: 2px;
+    border-radius: 2px;
 }
 
 div.message span.pair:hover, div.message span.pair.highlight {
@@ -247,6 +261,18 @@ th:first-child {
 
 th:last-child {
  border-top-right-radius: 7px;
+}
+
+tr:last-child td:first-child {
+ border-bottom-left-radius: 7px;
+}
+
+tr:last-child td:last-child {
+ border-bottom-right-radius: 7px;
+}
+
+tr:last-child td {
+ border-bottom: 0;
 }
 
 td {
@@ -407,6 +433,14 @@ tr.level-2 td.name {
 
 tr.level-3 td.name {
     padding-left: calc(var(--indent-step) * 3);
+}
+
+.credits {
+    font-family: var(--font-family), sans-serif;
+    color: var(--font-color);
+    font-size: x-small;
+    text-align: right;
+    padding: 3px;
 }
 
 @media screen and (max-width: 600px) {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blue Style</title>
+    <style>
+        body {
+            background-color: #01161e;
+            padding: 20px;
+        }
+
+        fix-message {
+            /* Main Text and Background */
+            --font-color: #E5F0FF;             /* Very light blue (almost white) for main text */
+            --background-color: #1E3A5F;        /* Deep, dark blue for the main background */
+            --even-backgroud-color: #152C46;     /* Slightly darker blue for alternating/even rows */
+
+            /* Header Section */
+            --header-font-color: #FFFFFF;         /* Pure white for header text */
+            --header-background-color: #0A192F;    /* Very dark navy/almost black for header bar */
+
+            /* Section/Groupings */
+            --section-font-color: #B0C4DE;       /* Light steel blue for section text */
+            --section-background-color: #284C7A;  /* Medium dark blue for section backgrounds */
+
+            /* Borders and Tree/Lines */
+            --border-color: #0F213A;            /* Dark blue border */
+            --tree-color: #6A8BAA;              /* Muted blue for tree lines/structure */
+
+            /* Value/Syntax Highlighting */
+            --tag-color: #89D9D9;               /* Bright cyan/light blue for tags/keys */
+            --string-value-color: #8BC34A;      /* Green for string values */
+            --integer-value-color: #64B5F6;     /* Lighter blue for integer values */
+            --float-value-color: #64B5F6;       /* Lighter blue for float values */
+            --char-value-color: #FFAB91;        /* Light coral/orange for char values */
+            --boolean-value-color: #FFAB91;     /* Light coral/orange for boolean values */
+            --datetime-value-color: #FFAB91;    /* Light coral/orange for datetime values */
+            --type-color: #9DB8D6;              /* Muted light blue for type labels */
+            --link-color: #82AAFF;              /* Vivid, light blue for links */
+        }
+    </style>
+</head>
+<body>
+<fix-message
+        delimiter="|"
+        mode="table"
+        message="8=FIX.4.4|9=413|35=AE|34=2|52=20051121-08:39:50|49=MEFF|50=C2|56=A899|57=351|571=003C4E2B0000|150=F|818=101|527=FI0000000001|5681=M|570=Y|55=MNZ05|32=10|31=9365|75=20050330|60=20050330-07:39:21|768=1|769=20050330-07:39:21|770=3|63=0|881=101|880=101|552=1|54=2|37=050330OA89935100002|198=FI2|453=1|448=A899|447=D|452=13|1=00101|381=93650|77=O|136=2|137=0.00|138=EUR|139=4|891=0|137=1.50|138=EUR|139=7|891=0|568=TCRYY1|325=N|912=N|10=048|">
+</fix-message>
+<script src="../src/fix-message.mjs" type="module"></script>
+</body>
+</html>

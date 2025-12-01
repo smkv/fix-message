@@ -114,6 +114,8 @@ If you want to apply your own global CSS styles to the component, you can use th
     use-host-dom
 ></fix-message>
 ```
+See the example: [Swedbank style](examples/swedbank-style.html)
+![swedbank-style.png](examples/swedbank-style.png)
 
 ### Using SOH Separator
 FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly.
@@ -141,6 +143,8 @@ When using the default Shadow DOM encapsulation, you can customize the component
     }
 </style>
 ```
+See the example: [blue style](examples/blue-style.html)
+![blue-style.png](examples/blue-style.png)
 
 Here is a list of the available CSS variables:
 
