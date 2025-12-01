@@ -84,6 +84,16 @@ The `table` mode provides a detailed, human-readable view of the FIX message, wi
 ></fix-message>
 ```
 
+### Using SOH Separator
+FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly.
+
+```html
+<fix-message
+    message="8=FIX.4.29=12335=D..."
+    mode="table"
+></fix-message>
+```
+
 ### Using a Custom Dictionary
 For proprietary FIX implementations or custom tags, you can provide a path to your own dictionary file. This is useful when working with non-standard FIX messages. The dictionary file should be in the QuickFixJ XML format.
 
@@ -93,37 +103,6 @@ For proprietary FIX implementations or custom tags, you can provide a path to yo
     mode="table"
     delimiter="|"
     data-dictionary="/path/to/your/custom-fix-dictionary.xml"
-></fix-message>
-```
-
-### Styling with Host CSS (`use-host-dom`)
-If you want to apply your own global CSS styles to the component, you can use the `use-host-dom` attribute. This will render the component in the main document's DOM, allowing your stylesheets to apply. This is useful for integrating the component seamlessly into your application's design.
-
-```html
-<style>
-    /* Example: Custom styles for the table */
-    fix-message table {
-        border: 2px solid blue;
-    }
-</style>
-
-<fix-message
-    message="8=FIX.4.2|9=123|35=D|..."
-    mode="table"
-    delimiter="|"
-    use-host-dom
-></fix-message>
-```
-See the example: [Swedbank style](examples/swedbank-style.html)
-![swedbank-style.png](examples/swedbank-style.png)
-
-### Using SOH Separator
-FIX messages often use the non-printable Start of Header (SOH) character (`\x01`) as a delimiter. You can pass the message in this format and the component will parse it correctly.
-
-```html
-<fix-message
-    message="8=FIX.4.29=12335=D..."
-    mode="table"
 ></fix-message>
 ```
 
@@ -172,6 +151,29 @@ Here is a list of the available CSS variables:
 | `--datetime-value-color`| The color for date and time data types.              | `#a61945`                                               | <img width="40" height="20" src="https://dummyimage.com/40x20/a61945/a61945.png">                   |
 | `--type-color`          | The color for the data type column.                  | `#999`                                                  | <img width="40" height="20" src="https://dummyimage.com/40x20/999999/999999.png">                   |
 | `--value-color`         | The default color for values in the table.           | `var(--font-color)`                                     | <img width="40" height="20" src="https://dummyimage.com/40x20/000E24/000E24.png">                   |
+
+
+### Styling with Host CSS (`use-host-dom`)
+If you want to apply your own global CSS styles to the component, you can use the `use-host-dom` attribute. This will render the component in the main document's DOM, allowing your stylesheets to apply. This is useful for integrating the component seamlessly into your application's design.
+
+```html
+<style>
+    /* Example: Custom styles for the table */
+    fix-message table {
+        border: 2px solid blue;
+    }
+</style>
+
+<fix-message
+    message="8=FIX.4.2|9=123|35=D|..."
+    mode="table"
+    delimiter="|"
+    use-host-dom
+></fix-message>
+```
+See the example: [Swedbank style](examples/swedbank-style.html)
+![swedbank-style.png](examples/swedbank-style.png)
+
 
 ## Custom Events
 
