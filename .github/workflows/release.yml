@@ -1,0 +1,29 @@
+name: Release Zipper
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Zip src directory
+        run: zip -r fix-message-${{ env.VERSION }}.zip src -x "src/favicon.ico" "src/index.html" "src/fix-decoder.svg"
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./fix-message-${{ env.VERSION }}.zip
+          asset_name: fix-message-${{ env.VERSION }}.zip
+          asset_content_type: application/zip
