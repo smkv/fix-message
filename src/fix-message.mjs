@@ -538,6 +538,8 @@ tr.level-3 td.name {
                 return this.zonedTimeToLocalTime(value);
             case 'TZTIMESTAMP':
                 return this.zonedTimestampToLocalDateTime(value);
+            case 'TENOR':
+                return this.tenorDescription(value);
             case 'CURRENCY':
                 return value ? currencies[value.toUpperCase()] || '' : '';
             case 'COUNTRY':
@@ -951,6 +953,23 @@ tr.level-3 td.name {
             expected: expectedChecksum,
             calculated: formattedChecksum
         };
+    }
+
+    tenorDescription(value) {
+        const units = {
+            D: 'Day',
+            W: 'Week',
+            M: 'Month',
+            Y: 'Year'
+        };
+        const regex = /([DWMY])(\\d+)/gi
+        if (regex.test(value)) {
+            const exec = regex.exec(value);
+            const unit = units[exec[1]];
+            const count = exec[2];
+            return `${count} ${unit}${count > 1 ? 's' : ''}`;
+        }
+        return '';
     }
 }
 
