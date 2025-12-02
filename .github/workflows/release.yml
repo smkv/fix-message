@@ -16,7 +16,8 @@ jobs:
         run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Zip src directory
-        run: zip -r fix-message-${{ env.VERSION }}.zip src -x "src/favicon.ico" "src/index.html" "src/fix-decoder.svg"
+        working-directory: ./src
+        run: zip -r ../fix-message-${{ env.VERSION }}.zip . -x "favicon.ico" "index.html" "fix-decoder.svg"
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
