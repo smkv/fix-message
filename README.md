@@ -30,6 +30,9 @@ Demo FIX message decoder can be found here https://fix-decoder.samkov.ee
 
 ## Usage
 
+Watch a quick video tutorial on YouTube:
+[![FIX Message Decoder makes life easier with YouTube](https://img.youtube.com/vi/Smyy3JWhHwc/maxresdefault.jpg)](https://www.youtube.com/watch?v=Smyy3JWhHwc)
+
 To use the `fix-message` component, you need to include the `fix-message.mjs` script in your HTML file and then use the `<fix-message>` tag. The component will automatically render repeating groups in a tree-like structure.
 
 ```html
