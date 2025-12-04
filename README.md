@@ -10,7 +10,7 @@ The component parses FIX messages and enriches them with data from a FIX diction
 
 ### Key Features:
 
-*   **Two Display Modes**: View FIX messages as a raw string with custom delimiters or as a comprehensive HTML table.
+*   **Multiple Display Modes**: View FIX messages as a raw string, a compact list, or a comprehensive HTML table.
 *   **Hierarchical Group Display**: Repeating groups are displayed in an indented, tree-like structure, making complex messages with nested components much easier to read.
 *   **FIX Dictionary Support**: Automatically uses the appropriate FIX dictionary based on the message version. It supports FIX versions 4.0 through 5.0 SP2.
 *   **Checksum Validation**: Automatically validates the message checksum and displays the result.
@@ -60,14 +60,14 @@ To use the `fix-message` component, you need to include the `fix-message.mjs` sc
 
 *   `message`: The FIX message string to be displayed. The default delimiter is the SOH character (ASCII 1).
 *   `delimiter`: The delimiter used in the `message` string. The default is `|`.
-*   `mode`: The display mode. Can be `string`, `list`, or `table`. If not specified, it will render as a string.
+*   `mode`: The display mode. Can be `string`, `list`, `compact`, or `table`. If not specified, it will render as a string. [Read more about modes](examples/modes.md)
 *   `data-dictionary`: (Optional) The path to a custom data dictionary XML file. If not provided, the component will use the built-in dictionaries based on the message's `BeginString(8)` value. The format should be the same as the QuickFixJ XML dictionary format.
 *   `use-host-dom`: (Optional) If present, the component will render directly into the host element's DOM instead of its shadow DOM. This is useful for applying global styles.
 
 ## Examples
 
 ### Default Mode (String)
-If you don't specify a `mode`, the component will render the FIX message as a simple string with the specified delimiter. This is useful for quickly displaying the raw message.
+If you don't specify a `mode`, the component will render the FIX message as a simple string with the specified delimiter. This is useful for quickly displaying the raw message. [Read more about modes](examples/modes.md)
 
 ```html
 <fix-message
@@ -77,7 +77,7 @@ If you don't specify a `mode`, the component will render the FIX message as a si
 ```
 
 ### List Mode
-The `list` mode provides a simple, unstyled list of the FIX message's tag-value pairs, rendered using `<ul>` and `<li>` tags. This is useful for developers who want to apply their own custom styling.
+The `list` mode provides a simple, unstyled list of the FIX message's tag-value pairs, rendered using `<ul>` and `<li>` tags. This is useful for developers who want to apply their own custom styling. [Read more about modes](examples/modes.md)
 
 ```html
 <fix-message
@@ -87,8 +87,19 @@ The `list` mode provides a simple, unstyled list of the FIX message's tag-value 
 ></fix-message>
 ```
 
+### Compact Mode
+The `compact` mode is a space-saving alternative to the `string` mode. It replaces tag numbers with tag names and enum values with their corresponding value names. The message has visual formatting (coloring) and shows tooltips with descriptions. This mode is useful to save space when showing messages inline. [Read more about modes](examples/modes.md)
+
+```html
+<fix-message
+    message="8=FIX.4.2|9=170|35=E|73=2|11=LIST1|...|68=2|11=ORDER1|...|11=ORDER2|...|10=161"
+    mode="compact"
+    delimiter="|"
+></fix-message>
+```
+
 ### Table Mode
-The `table` mode provides a detailed, human-readable view of the FIX message, with each tag-value pair on its own row. This is ideal for analysis and debugging. Repeating groups will be automatically indented.
+The `table` mode provides a detailed, human-readable view of the FIX message, with each tag-value pair on its own row. This is ideal for analysis and debugging. Repeating groups will be automatically indented. [Read more about modes](examples/modes.md)
 
 ```html
 <fix-message

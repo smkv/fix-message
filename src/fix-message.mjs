@@ -87,6 +87,8 @@ class FixMessageHTMLElement extends HTMLElement {
         if (this.message) {
             if (this.mode === 'table') {
                 await this.renderTable();
+            } else if (this.mode === 'compact') {
+                await this.renderCompact();
             } else if (this.mode === 'list') {
                 await this.renderList();
             } else {
@@ -100,6 +102,54 @@ class FixMessageHTMLElement extends HTMLElement {
 
     renderString() {
         this.dom.textContent = this.messageWithDelimiter;
+    }
+
+    async renderCompact() {
+        const model = await this.loadModel();
+        this.dom.innerHTML = '';
+        if (!this.useHostDom) {
+            this.appendStyle();
+        }
+        this.renderCompactSection(model.header);
+        this.renderCompactSection(model.message);
+        this.renderCompactSection(model.trailer);
+    }
+
+    renderCompactSection(section) {
+        for (const field of section) {
+            const tag = field.number;
+            const value = field.value;
+            const name = field.name || '';
+            const type = field.type || '';
+            const description = this.valueDescription(value, type, field.values, field.number) || '';
+            const nameSpan = document.createElement('span');
+            nameSpan.classList.add('name');
+            nameSpan.textContent = name;
+            nameSpan.title = tag;
+            const equalsSpan = document.createElement('span');
+            equalsSpan.classList.add('equals');
+            equalsSpan.textContent = '=';
+            const valueSpan = document.createElement('span');
+            if (field.values && field.values.hasOwnProperty(value)) {
+                valueSpan.classList.add('description');
+                valueSpan.textContent = description;
+                valueSpan.title = value;
+            } else {
+                valueSpan.classList.add('value');
+                valueSpan.dataset.type = type;
+                valueSpan.textContent = value;
+                valueSpan.title = description || value;
+            }
+            const delimiterSpan = document.createElement('span');
+            delimiterSpan.classList.add('delimiter');
+            delimiterSpan.textContent = this.delimiter;
+            this.dom.append(nameSpan, equalsSpan, valueSpan, delimiterSpan);
+            if (field.groups) {
+                for (const group of field.groups) {
+                    this.renderCompactSection(group);
+                }
+            }
+        }
     }
 
     async renderList() {
@@ -275,6 +325,11 @@ class FixMessageHTMLElement extends HTMLElement {
 
 a {
     color: var(--link-color);
+}
+
+.equals, .delimiter {
+   padding-left: 5px;
+   padding-right: 5px;
 }
 
 div.message {
@@ -596,6 +651,52 @@ li span.description:not(:empty):after {
         padding: 0 !important;
         margin: 0 !important;
     }
+}
+
+[title] {
+    position: relative;
+}
+
+[title]:hover {
+}
+
+[title]::after {
+    content: attr(title);
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background-color: var(--header-background-color);
+    color: var(--header-font-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+[title]::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--header-background-color) transparent transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1001;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+[title]:hover::after,
+[title]:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
 }`;
         this.dom.append(style);
     }
