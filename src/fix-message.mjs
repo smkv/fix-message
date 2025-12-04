@@ -123,7 +123,16 @@ class FixMessageHTMLElement extends HTMLElement {
                 const description = this.valueDescription(value, type, field.values, field.number) || '';
                 const li = document.createElement('li');
 
-                li.innerHTML = `<span class="tag">${tag}</span> <span class="name">${name}</span> = <span class="value" data-type="${type}">${value}</span> <span class="description">${description}</span>`
+                const tagSpan = document.createElement('span');
+                tagSpan.classList.add('tag');
+                tagSpan.textContent = tag;
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('name');
+                nameSpan.textContent = name;
+                const equalsSpan = document.createElement('span');
+                equalsSpan.classList.add('equals');
+                equalsSpan.textContent = ' = ';
+                li.append(tagSpan, ' ', nameSpan, equalsSpan, this.createValueSpan(value, type), ' ', this.createDescriptionSpan(description));
                 ul.append(li);
                 if (field.groups) {
                     for (const group of field.groups) {
@@ -143,6 +152,22 @@ class FixMessageHTMLElement extends HTMLElement {
             }
         }
         return ul;
+    }
+
+    createValueSpan(value, type) {
+        const valueSpan = document.createElement('span');
+        valueSpan.classList.add('value');
+        valueSpan.dataset.type = type;
+        valueSpan.textContent = value;
+        return valueSpan;
+    }
+
+    createDescriptionSpan(description) {
+        const descriptionSpan = document.createElement('span');
+        descriptionSpan.classList.add('description');
+        descriptionSpan.textContent = description;
+        descriptionSpan.style.display = description ? 'inline' : 'none'; // Hide if empty
+        return descriptionSpan;
     }
 
     capitalizeFirstLetter(name) {
@@ -299,7 +324,7 @@ table tr.highlight {
     background-color: color-mix(in srgb, var(--even-backgroud-color), black 5%);
 }
 
-th {
+th, th.tag, th.name, th.value, th.description, th.type {
     background-color: var(--header-background-color);
     color: var(--header-font-color);
     text-align: left;

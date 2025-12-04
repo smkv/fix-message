@@ -16,7 +16,19 @@
     <h1>Fix Message Web Component</h1>
     <table id="messagesTable">
     </table>
-
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="mode" id="modeString" value="string">
+        <label class="form-check-label" for="modeString">string</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="mode" id="modeList" value="list">
+        <label class="form-check-label" for="modeList">list</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="mode" id="modeTable" value="table" checked>
+        <label class="form-check-label" for="modeTable">table</label>
+    </div>
+    <hr/>
     <fix-message id="fixMessage" message="" mode="table" delimiter="|"></fix-message>
 </div>
 <script src="../src/fix-message.mjs" type="module"></script>
@@ -35,7 +47,7 @@
                 a.href = '#';
                 a.addEventListener('click', () => {
                     messagesTable.querySelectorAll('td.selected').forEach(td => td.classList.remove('selected'));
-                    fixMessage.message = message;
+                    fixMessage.setAttribute('message', message);
                     td.classList.add('selected');
                 });
                 td.appendChild(a);
@@ -44,6 +56,16 @@
             });
         });
 
+    document.querySelectorAll('input[name="mode"]').forEach(input => {
+        if (input.checked) {
+            fixMessage.setAttribute('mode', input.value);
+        }
+        input.addEventListener('change', () => {
+            if (input.checked) {
+                fixMessage.setAttribute('mode', input.value);
+            }
+        });
+    });
 
 </script>
 </body>
