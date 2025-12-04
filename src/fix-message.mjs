@@ -87,6 +87,8 @@ class FixMessageHTMLElement extends HTMLElement {
         if (this.message) {
             if (this.mode === 'table') {
                 await this.renderTable();
+            } else if (this.mode === 'list') {
+                await this.renderList();
             } else {
                 this.renderString();
             }
@@ -98,6 +100,53 @@ class FixMessageHTMLElement extends HTMLElement {
 
     renderString() {
         this.dom.textContent = this.messageWithDelimiter;
+    }
+
+    async renderList() {
+        const model = await this.loadModel();
+        this.dom.innerHTML = '';
+        if (!this.useHostDom) {
+            this.appendStyle();
+        }
+        this.dom.append(this.createList(model));
+        this.appendCredits();
+    }
+
+    createList(model) {
+        const ul = document.createElement('ul');
+        if (Array.isArray(model)) {
+            for (const field of model) {
+                const tag = field.number;
+                const value = field.value;
+                const name = field.name || '';
+                const type = field.type || '';
+                const description = this.valueDescription(value, type, field.values, field.number) || '';
+                const li = document.createElement('li');
+
+                li.innerHTML = `<span class="tag">${tag}</span> <span class="name">${name}</span> = <span class="value" data-type="${type}">${value}</span> <span class="description">${description}</span>`
+                ul.append(li);
+                if (field.groups) {
+                    for (const group of field.groups) {
+                        ul.append(this.createList(group));
+                    }
+                }
+            }
+        } else if (typeof model === 'object') {
+            for (const [name, value] of Object.entries(model)) {
+                const li = document.createElement('li');
+                li.textContent = `${this.capitalizeFirstLetter(name)}`;
+                li.classList.add('section');
+                ul.append(li);
+                if (Array.isArray(value)) {
+                    ul.append(this.createList(value));
+                }
+            }
+        }
+        return ul;
+    }
+
+    capitalizeFirstLetter(name) {
+        return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
     async renderTable() {
@@ -159,7 +208,10 @@ class FixMessageHTMLElement extends HTMLElement {
         this.dom.append(messageDiv, table);
         this.table = table;
         this.messageDiv = messageDiv;
+        this.appendCredits();
+    }
 
+    appendCredits() {
         const credits = document.createElement('div');
         credits.innerHTML = `Powered by <a href="https://github.com/smkv/fix-message" target="_blank">fix-message</a> Web Component, Copyright © ${new Date().getFullYear()} Andrei Samkov`;
         credits.classList.add('credits');
@@ -281,81 +333,81 @@ td {
     padding: 5px;
 }
 
-td.section {
+.section {
     background-color: var(--section-background-color);
     color: var(--section-font-color);
     padding: 5px;
 }
 
-td.tag {
+.tag {
     font-family: var(--font-monospace), monospace;
     font-weight: bold;
     color: var(--tag-color);
 }
 
-td.name {
+.name {
     font-weight: 600;
     color: var(--font-color);
 }
 
-td.value {
+.value {
     font-family: var(--font-monospace), monospace;
     word-break: break-all;
 }
 
-td.value[data-type=INT],
-td.value[data-type=SEQNUM],
-td.value[data-type=LENGTH],
-td.value[data-type=NUMINGROUP] {
+.value[data-type=INT],
+.value[data-type=SEQNUM],
+.value[data-type=LENGTH],
+.value[data-type=NUMINGROUP] {
     color: var(--integer-value-color);
 }
 
-td.value[data-type=PRICE],
-td.value[data-type=AMT],
-td.value[data-type=QTY],
-td.value[data-type=FLOAT],
-td.value[data-type=PRICEOFFSET],
-td.value[data-type=PERCENTAGE] {
+.value[data-type=PRICE],
+.value[data-type=AMT],
+.value[data-type=QTY],
+.value[data-type=FLOAT],
+.value[data-type=PRICEOFFSET],
+.value[data-type=PERCENTAGE] {
     color: var(--float-value-color);
 }
 
-td.value[data-type=STRING],
-td.value[data-type=MULTIPLEVALUESTRING],
-td.value[data-type=MULTIPLESTRINGVALUE],
-td.value[data-type=EXCHANGE],
-td.value[data-type=CURRENCY],
-td.value[data-type=LOCALMKTDATE],
-td.value[data-type=DATA],
-td.value[data-type=MONTHYEAR],
-td.value[data-type=DAYOFMONTH],
-td.value[data-type=COUNTRY] {
+.value[data-type=STRING],
+.value[data-type=MULTIPLEVALUESTRING],
+.value[data-type=MULTIPLESTRINGVALUE],
+.value[data-type=EXCHANGE],
+.value[data-type=CURRENCY],
+.value[data-type=LOCALMKTDATE],
+.value[data-type=DATA],
+.value[data-type=MONTHYEAR],
+.value[data-type=DAYOFMONTH],
+.value[data-type=COUNTRY] {
     color: var(--string-value-color);
 }
 
-td.value[data-type=CHAR],
-td.value[data-type=MULTIPLECHARVALUE] {
+.value[data-type=CHAR],
+.value[data-type=MULTIPLECHARVALUE] {
     color: var(--char-value-color);
     font-weight: bold;
 }
 
-td.value[data-type=BOOLEAN] {
+.value[data-type=BOOLEAN] {
     color: var(--boolean-value-color);
     font-style: italic;
 }
 
-td.value[data-type=UTCDATE],
-td.value[data-type=UTCTIMEONLY],
-td.value[data-type=UTCTIMESTAMP],
-td.value[data-type=TIME] {
+.value[data-type=UTCDATE],
+.value[data-type=UTCTIMEONLY],
+.value[data-type=UTCTIMESTAMP],
+.value[data-type=TIME] {
     color: var(--datetime-value-color);
 }
 
-td.description {
+.description {
     font-family: var(--font-monospace), sans-serif;
     word-break: break-all;
 }
 
-td.type {
+.type {
     font-family: var(--font-monospace), sans-serif;
     color: var(--type-color);
     line-height: 1;
@@ -442,6 +494,44 @@ tr.level-3 td.name {
     text-align: right;
     padding: 3px;
 }
+
+ul {
+    font-family: var(--font-family), sans-serif;
+    color: var(--font-color);
+    background-color: var(--background-color);
+    list-style-type: none;
+}
+
+ul > ul {
+    border-top: 1px solid var(--section-background-color);
+}
+
+:host > ul:before {
+    display: block;
+    content: 'FIX Message';
+    background-color: var(--header-background-color);
+    color: var(--header-font-color);
+    padding: 5px;
+}
+
+li span.tag {
+    display: inline-block;
+    width: 50px;
+}
+
+li span.name {
+    display: inline-block;
+    min-width: 120px;
+}
+
+li span.description:not(:empty):before {
+    content: '(';
+}
+
+li span.description:not(:empty):after {
+    content: ')';
+}
+
 
 @media screen and (max-width: 600px) {
     th {

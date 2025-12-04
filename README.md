@@ -60,7 +60,7 @@ To use the `fix-message` component, you need to include the `fix-message.mjs` sc
 
 *   `message`: The FIX message string to be displayed. The default delimiter is the SOH character (ASCII 1).
 *   `delimiter`: The delimiter used in the `message` string. The default is `|`.
-*   `mode`: The display mode. Can be `string` or `table`. If not specified, it will render as a string.
+*   `mode`: The display mode. Can be `string`, `list`, or `table`. If not specified, it will render as a string.
 *   `data-dictionary`: (Optional) The path to a custom data dictionary XML file. If not provided, the component will use the built-in dictionaries based on the message's `BeginString(8)` value. The format should be the same as the QuickFixJ XML dictionary format.
 *   `use-host-dom`: (Optional) If present, the component will render directly into the host element's DOM instead of its shadow DOM. This is useful for applying global styles.
 
@@ -72,6 +72,17 @@ If you don't specify a `mode`, the component will render the FIX message as a si
 ```html
 <fix-message
     message="8=FIX.4.2|9=123|35=D|..."
+    delimiter="|"
+></fix-message>
+```
+
+### List Mode
+The `list` mode provides a simple, unstyled list of the FIX message's tag-value pairs, rendered using `<ul>` and `<li>` tags. This is useful for developers who want to apply their own custom styling.
+
+```html
+<fix-message
+    message="8=FIX.4.2|9=123|35=D|..."
+    mode="list"
     delimiter="|"
 ></fix-message>
 ```
