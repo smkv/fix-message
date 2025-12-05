@@ -71,3 +71,8 @@ The `table` mode provides the most detailed and human-readable view of the FIX m
 
 **Screenshot:**
 ![Table Mode Screenshot](mode-table.png)
+
+## Video tutorial
+
+Watch a quick video tutorial on YouTube: https://youtu.be/iOZ4hYUwWoc
+[![FIX Message Decoder Tutorial: Raw Log to Structured Data](https://img.youtube.com/vi/iOZ4hYUwWoc/maxresdefault.jpg)](https://www.youtube.com/watch?v=iOZ4hYUwWoc)
