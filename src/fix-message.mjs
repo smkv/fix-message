@@ -40,8 +40,8 @@ class FixMessageHTMLElement extends HTMLElement {
         'FIX.4.3': FixMessageHTMLElement.parentUrl + 'FIX43.xml',
         'FIX.4.4': FixMessageHTMLElement.parentUrl + 'FIX44.xml',
         'FIX.5.0': FixMessageHTMLElement.parentUrl + 'FIX50.xml',
-        'FIX.5.0S P1': FixMessageHTMLElement.parentUrl + 'FIX50SP1.xml',
-        'FIX.5.0S P2': FixMessageHTMLElement.parentUrl + 'FIX50SP2.xml',
+        'FIX.5.0 SP1': FixMessageHTMLElement.parentUrl + 'FIX50SP1.xml',
+        'FIX.5.0 SP2': FixMessageHTMLElement.parentUrl + 'FIX50SP2.xml',
         'FIXT.1.1': FixMessageHTMLElement.parentUrl + 'FIXT11.xml'
     };
     static ApplVerIDs = {
