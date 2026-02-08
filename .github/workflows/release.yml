@@ -15,6 +15,24 @@ jobs:
         id: get_version
         run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
+      - name: Set up Maven Central
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: central
+          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish to Maven Central
+        run: mvn clean deploy -DskipTests --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          VERSION: ${{ env.VERSION }}
+
       - name: Zip src directory
         working-directory: ./src
         run: zip -r ../fix-message-${{ env.VERSION }}.zip . -x "favicon.ico" "index.html" "fix-decoder.svg"
