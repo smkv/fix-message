@@ -6,7 +6,7 @@
 
     <groupId>ee.samkov</groupId>
     <artifactId>fix-message</artifactId>
-    <version>${env.VERSION}</version>
+    <version>${VERSION}</version>
     <packaging>jar</packaging>
 
     <name>fix-message</name>
