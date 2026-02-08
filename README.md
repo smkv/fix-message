@@ -200,6 +200,22 @@ See the example: [Swedbank style](examples/swedbank-style.html)
 ![swedbank-style.png](examples/swedbank-style.png)
 
 
+## Java WebJar Support
+
+This component can be used in Java applications as a WebJar. Add the following Maven dependency:
+
+```xml
+<dependency>
+    <groupId>ee.samkov</groupId>
+    <artifactId>fix-message</artifactId>
+    <version>1.2.2</version>
+</dependency>
+```
+
+The resources will be available at `/webjars/fix-message/1.2.2/fix-message.mjs`.
+
+For more information on how to configure and use WebJars, please refer to [this article](https://www.baeldung.com/maven-webjars).
+
 ## Custom Events
 
 The `fix-message` component emits a `rendered` event after it has finished rendering the FIX message. This can be useful for performing actions after the component has been updated.
