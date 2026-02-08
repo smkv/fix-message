@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ee.samkov</groupId>
+    <artifactId>fix-message</artifactId>
+    <version>${env.VERSION}</version>
+    <packaging>jar</packaging>
+
+    <name>fix-message</name>
+    <description>Simple JavaScript library for FIX messages</description>
+    <url>https://github.com/smkv/fix-message</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Andrei Samkov</name>
+            <email>andrei.samkov@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/smkv/fix-message.git</connection>
+        <developerConnection>scm:git:ssh://github.com:smkv/fix-message.git</developerConnection>
+        <url>https://github.com/smkv/fix-message/tree/main</url>
+    </scm>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <targetPath>META-INF/resources/webjars/fix-message/${project.version}</targetPath>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>README.md</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src</directory>
+                <targetPath>META-INF/resources/webjars/fix-message/${project.version}</targetPath>
+                <includes>
+                    <include>*.mjs</include>
+                    <include>*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
