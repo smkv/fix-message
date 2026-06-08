@@ -56,6 +56,9 @@ class FixMessageHTMLElement extends HTMLElement {
     }
     dom;
     useHostDom;
+    _pairs = null;
+    _rendering = false;
+    _renderPending = false;
     labelTag = 'Tag';
     labelTagName = 'Tag Name';
     labelValue = 'Value';
@@ -77,27 +80,42 @@ class FixMessageHTMLElement extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'message' || name === 'delimiter') {
+            this._pairs = null;
+        }
         if (this.dom) {
             this.render();
         }
     }
 
     async render() {
-        this.dom.textContent = 'Loading...';
-        if (this.message) {
-            if (this.mode === 'table') {
-                await this.renderTable();
-            } else if (this.mode === 'compact') {
-                await this.renderCompact();
-            } else if (this.mode === 'list') {
-                await this.renderList();
-            } else {
-                this.renderString();
-            }
-        } else {
-            this.dom.textContent = 'No FIX message to display';
+        if (this._rendering) {
+            this._renderPending = true;
+            return;
         }
-        this.dispatchEvent(new CustomEvent('rendered'));
+        this._rendering = true;
+        try {
+            do {
+                this._renderPending = false;
+                this.dom.textContent = 'Loading...';
+                if (this.message) {
+                    if (this.mode === 'table') {
+                        await this.renderTable();
+                    } else if (this.mode === 'compact') {
+                        await this.renderCompact();
+                    } else if (this.mode === 'list') {
+                        await this.renderList();
+                    } else {
+                        this.renderString();
+                    }
+                } else {
+                    this.dom.textContent = 'No FIX message to display';
+                }
+                this.dispatchEvent(new CustomEvent('rendered'));
+            } while (this._renderPending);
+        } finally {
+            this._rendering = false;
+        }
     }
 
     renderString() {
@@ -812,10 +830,16 @@ li span.description:not(:empty):after {
         const version = this.getValueByTag(FixMessageHTMLElement.KnownTags.BeginString);
         let defaultDictionaryFile = FixMessageHTMLElement.VersionFiles[version];
         const transportDictionary = await this.loadDictionary(defaultDictionaryFile);
+        if (!transportDictionary) {
+            throw new Error(`Failed to load transport dictionary for version: ${version}`);
+        }
         if (version.startsWith('FIXT')) {
             defaultDictionaryFile = FixMessageHTMLElement.VersionFiles[this.detectDataVersion(transportDictionary, version)];
         }
         const dataDictionary = await this.loadDictionary(this.dataDictionary || defaultDictionaryFile);
+        if (!dataDictionary) {
+            throw new Error('Failed to load data dictionary');
+        }
         const msgType = this.getValueByTag(FixMessageHTMLElement.KnownTags.MsgType);
         const isTransportMessage = transportDictionary.messages.hasOwnProperty(msgType);
         const headerSchema = transportDictionary.header;
@@ -938,15 +962,18 @@ li span.description:not(:empty):after {
     }
 
     get pairs() {
-        return this.messageWithDelimiter.split(this.delimiter).filter(Boolean).map(
-            pair => pair.split('=', 2)
-        );
+        if (!this._pairs) {
+            this._pairs = this.messageWithDelimiter.split(this.delimiter).filter(Boolean).map(
+                pair => pair.split('=', 2)
+            );
+        }
+        return this._pairs;
     }
 
     get messageWithDelimiter() {
         let msg = this.message.replaceAll(FixMessageHTMLElement.SOH, this.delimiter);
         if (!this.delimiter.includes('\n')) {
-            msg = msg.replaceAll('\r?\n\r?', '');
+            msg = msg.replace(/\r?\n\r?/g, '');
         }
         return msg;
     }
@@ -991,18 +1018,22 @@ li span.description:not(:empty):after {
         if (FixMessageHTMLElement.DictionaryCache.hasOwnProperty(file)) {
             return FixMessageHTMLElement.DictionaryCache[file];
         }
-        const response = await fetch(file, {
-            headers: {
-                'Accept': 'application/xml, text/xml'
+        try {
+            const response = await fetch(file, {
+                headers: {
+                    'Accept': 'application/xml, text/xml'
+                }
+            });
+            if (response.ok) {
+                const data = new Dictionary(await response.text(), response.headers.get('Content-Type') || 'application/xml');
+                FixMessageHTMLElement.DictionaryCache[file] = data;
+                return data;
             }
-        });
-        if (response.ok) {
-            const data = new Dictionary(await response.text(), response.headers.get('Content-Type') || 'application/xml');
-            FixMessageHTMLElement.DictionaryCache[file] = data;
-            return data;
-        } else {
             console.error('Error loading data dictionary:', response.statusText);
+        } catch (e) {
+            console.error('Error loading data dictionary:', e);
         }
+        return null;
     }
 
     utcTimestampToLocalDateTime(value) {
@@ -1178,9 +1209,9 @@ li span.description:not(:empty):after {
             M: 'Month',
             Y: 'Year'
         };
-        const regex = /([DWMY])(\\d+)/gi
-        if (regex.test(value)) {
-            const exec = regex.exec(value);
+        const regex = /([DWMY])(\d+)/i;
+        const exec = regex.exec(value);
+        if (exec) {
             const unit = units[exec[1]];
             const count = exec[2];
             return `${count} ${unit}${count > 1 ? 's' : ''}`;
@@ -1191,11 +1222,11 @@ li span.description:not(:empty):after {
 
 class Dictionary {
     version;
-    header = new Map();
-    trailer = new Map();
-    messages = new Map();
-    fieldsByNumber = new Map();
-    fieldsByName = new Map();
+    header = {};
+    trailer = {};
+    messages = {};
+    fieldsByNumber = {};
+    fieldsByName = {};
     document;
 
     constructor(xml, contentType = 'application/xml') {
@@ -1208,8 +1239,8 @@ class Dictionary {
         let fixElement = this.document.documentElement;
         this.version = `${fixElement.getAttribute('type') || 'FIX'}.${fixElement.getAttribute('major')}.${fixElement.getAttribute('minor')}`
         let fieldsElement = fixElement.getElementsByTagName('fields')[0];
-        this.fieldsByNumber = new Map();
-        this.fieldsByName = new Map();
+        this.fieldsByNumber = {};
+        this.fieldsByName = {};
         for (let fieldElement of fieldsElement.getElementsByTagName('field')) {
             let number = fieldElement.getAttribute('number');
             let name = fieldElement.getAttribute('name');
@@ -1230,7 +1261,7 @@ class Dictionary {
         this.header = this.parseComponent(fixElement.getElementsByTagName('header')[0]);
         this.trailer = this.parseComponent(fixElement.getElementsByTagName('trailer')[0]);
 
-        this.messages = new Map();
+        this.messages = {};
         let messagesElement = fixElement.getElementsByTagName('messages')[0];
         for (let messageElement of messagesElement.getElementsByTagName('message')) {
             let msgtype = messageElement.getAttribute('msgtype');
@@ -1239,7 +1270,7 @@ class Dictionary {
     }
 
     parseComponent(root) {
-        let result = new Map();
+        let result = {};
         for (let element of root.children) {
             if (element.tagName === 'field') {
                 let name = element.getAttribute('name');
@@ -1250,14 +1281,9 @@ class Dictionary {
                 result[name] = Object.assign({group}, this.fieldsByName[name]);
             } else if (element.tagName === 'component') {
                 let name = element.getAttribute('name');
-                let xPathResult = this.document.evaluate(
-                    `/fix/components/component[@name='${name}']`,
-                    this.document,
-                    null,
-                    XPathResult.ANY_UNORDERED_NODE_TYPE,
-                    null
-                );
-                let componentElement = xPathResult.singleNodeValue;
+                let componentElement = this.document.getElementsByTagName('components')[0]
+                    ?.querySelector(`[name="${CSS.escape(name)}"]`);
+                if (!componentElement) continue;
                 let component = this.parseComponent(componentElement);
                 for (let key of Object.keys(component)) {
                     result[key] = component[key];
